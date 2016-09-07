@@ -48,8 +48,8 @@ end
 b = ball(cfg.ball_start,cfg);
 
 %set up field
-[fig, stats_handles, ax]= ShowField(cfg);
-stats = 0;
+%[fig, stats_handles, ax]= ShowField(cfg);
+%stats = 0;
 
 
 %% Main Visualization
@@ -72,11 +72,11 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %drawing update  
-[p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
+%[p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
 
 %pff visualization
-num = 3; %player to visualize (start with 1:5 for now)
-VisPFF(p,b,w,ax,cfg,num);
+num = 2; %player to visualize (start with 1:5 for now)
+VisPFF(p,b,w,cfg,num);
 
     
 

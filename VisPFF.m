@@ -1,4 +1,4 @@
-function [] = VisPFF(p,b,w,ax,cfg,num)
+function [] = VisPFF(p,b,w,cfg,num)
 %VISPFF Visualize potential field function
 
 %graph params
@@ -6,7 +6,7 @@ xmin = -cfg.field_length_max;
 xmax = cfg.field_length_max;
 ymin  = -cfg.field_width_max;
 ymax = cfg.field_width_max;
-step_size = 0.1;
+step_size = 0.05;
 
 %set up grid
 [X,Y] = meshgrid(xmin:step_size:xmax,ymin:step_size:ymax);

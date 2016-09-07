@@ -26,7 +26,7 @@ function [ fns ] = create_pff_funcs(cfg)
 Pwall = @(c1,k1,d) max([0,c1 - k1*d]); %where d is distance to boundary
 
 %ball attraction
-Pball = @(c2,k2,dball) 1/k2*abs(c2 - dball);
+Pball = @(c2,k2,dball) k2*abs(c2 - dball);
 
 %Teammate repulsion
 Pteam = @(c3,k3,dteam) max([0,c3-k3*dteam]);
