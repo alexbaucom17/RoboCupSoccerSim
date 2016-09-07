@@ -75,7 +75,8 @@ b = update(b);
 [p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
 
 %pff visualization
-VisPFF(p,b,w,ax,cfg);
+num = 3; %player to visualize (start with 1:5 for now)
+VisPFF(p,b,w,ax,cfg,num);
 
     
 

@@ -96,4 +96,18 @@ cfg.world_seeBallNewRate = 0.8;
 cfg.world_seeBallContRate = 0.99;
 cfg.world_seeBallFOV = 120*pi/180;
 
+%Potential Field Function
+%                   /wall\  /ball\  /team\  fb  db
+%                   c1  k1  c2  k2  c3  k3  k4  k5    
+cfg.pff_weights = [ 1   1   0   0   1   1   1   1;  %goalie
+                    1   1   0   2   0   0   1   1;  %attacker
+                    5   10   0   0   1   5   1   1;  %defender
+                    1   1   1   2   1   1   1   1;  %supporter
+                    1   1   0   0   1   1   1   1]; %defender2
+                    
+
+    
+
+
+
 

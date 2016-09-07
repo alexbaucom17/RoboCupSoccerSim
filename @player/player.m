@@ -212,6 +212,7 @@ classdef player
             xya(2) = T(2,3);
             xya(3) = atan2(T(2,1),T(1,1));            
         end
+            
     end
  
     
