@@ -99,13 +99,30 @@ cfg.world_seeBallFOV = 120*pi/180;
 %Potential Field Function
 %                   /wall\  /ball\  /team\  fb  db
 %                   c1  k1  c2  k2  c3  k3  k4  k5    
-cfg.pff_weights = [ 1   1   0   0   1   1   1   1;  %goalie
-                    3   2   0.5 2   2   1   1   1;  %attacker
-                    5   9   0   0   1   5   1   1;  %defender
-                    0   0   0   0   1   1   0   0;  %supporter
-                    1   1   0   0   1   1   1   1]; %defender2
-                    
+% cfg.pff_weights = [ 1   1   0   0   1   1   0   1;  %goalie
+%                     3   2   0.5 2   2   1   0   1;  %attacker
+%                     3   2   0   0   2   1   0   1;  %defender
+%                     3   2   0   1   2   1   1   0;  %supporter
+%                     3   2   0   0   1   1   0   1]; %defender2
 
+                                %goalie attacker defender supporter defender2   
+pff_weights.boundary_reach =    [   1      3        3         3        3];
+pff_weights.boundary_scale =    [   1      2        2         2        2];
+pff_weights.ball_eq_pos    =    [   0      0.5      0         0        0];
+pff_weights.ball_scale     =    [   0      2.5      0         1        0];
+pff_weights.team_reach     =    [   0      1        0         2        0];
+pff_weights.team_scale     =    [   0      1        0         1        0];
+pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
+pff_weights.def_bias_scale =    [   1      0        1         0        1];
+pff_weights.att_shot_scale =    [   0      1        0         0        0];
+pff_weights.att_bias_scale =    [   0      1.3      0         0        0];
+pff_weights.sup_shot_dist  =    [   0      0        0         2        0];
+pff_weights.sup_shot_scale =    [   0      0        0         1        0];
+pff_weights.def_shot_scale =    [   1      0        1         0        1];
+pff_weights.offset_scale   =    [   0      0        0         1        0];
+
+cfg.pff_weights = cell2mat(struct2cell(pff_weights));
+clear pff_weights
     
 
 
