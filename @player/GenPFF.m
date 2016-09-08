@@ -23,7 +23,7 @@ function [ fns ] = create_pff_funcs(cfg)
 %% Individual potential field components
 
 %boundary repulstion
-Pwall = @(c1,k1,d) max([0,c1 - k1*d]);
+Pwall = @(c1,k1,dwall) max([0,c1 - k1*dwall]);
 
 %ball attraction
 Pball = @(c2,k2,dball) k2*abs(c2 - dball);
@@ -41,7 +41,7 @@ Pdbias = @(k5,dgoalline) k5*dgoalline;
 Pshot = @(k6,dshotpath) k6*abs(dshotpath);
 
 %attacker stay behind ball
-Prevbias = @(k7,d_behind_ball) -max([0,k7*d_behind_ball]);
+Prevbias = @(k7,c7,d_behind_ball) max([0,c7-k7*d_behind_ball]); 
 
 %supporter avoid shot path but stay close
 Pshot_sup = @(k8,c8,dshotpath) k8*abs(c8-dshotpath);
@@ -55,6 +55,8 @@ Psidebias = @(k10,Ry,By) max([0,k10*Ry*By/cfg.field_width]); %not sure I like th
 %everyone face the ball
 
 %goalie go to ball if close enough
+
+%something to keep attacker off to side of ball if not behind it 
 
 
 %% Put functions together
@@ -72,10 +74,10 @@ for i = 1:5
     Pfwbias2 = @(d) Pfwbias(w(7),d);
     Pdbias2 = @(d) Pdbias(w(8),d);
     Pshot2 = @(d) Pshot(w(9),d);
-    Prevbias2 = @(d) Prevbias(w(10),d);
-    Pshot_sup2 = @(d) Pshot_sup(w(11),w(12),d);
-    Pdef_shot2 = @(d) Pdef_shot(w(13),d);
-    Psidebias2 = @(Ry,By) Psidebias(w(14),Ry,By);
+    Prevbias2 = @(d) Prevbias(w(10),w(11),d);
+    Pshot_sup2 = @(d) Pshot_sup(w(12),w(13),d);
+    Pdef_shot2 = @(d) Pdef_shot(w(14),d);
+    Psidebias2 = @(Ry,By) Psidebias(w(15),Ry,By);
     
     %since there are multiple walls and teammates we need to use arrayfun
     %for these

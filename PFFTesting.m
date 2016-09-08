@@ -21,7 +21,7 @@ cfg.start_pos(9,:) = [2,-1,pi];     %blue supporter
 cfg.start_pos(10,:) = [3,-0.5,pi];  %blue defender2
 cfg.start_pos(6,:) = [3,0.5,pi];    %blue goalie
 cfg.debug = true;
-cfg.ball_start = [0,0];
+cfg.ball_start = [-4,2.5];
 cfg.pff_testing = true;
 
 %set up world
