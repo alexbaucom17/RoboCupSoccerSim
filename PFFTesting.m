@@ -6,7 +6,7 @@ clear
 rng('shuffle')
 
 %set up configuration variables
-addpath game
+addpath game pff
 Config();
 
 %override some configurations for potential field testing
@@ -21,11 +21,14 @@ cfg.start_pos(9,:) = [2,-1,pi];     %blue supporter
 cfg.start_pos(10,:) = [3,-0.5,pi];  %blue defender2
 cfg.start_pos(6,:) = [3,0.5,pi];    %blue goalie
 cfg.debug = true;
-cfg.ball_start = [-4,2.5];
+cfg.ball_start = [2.2,2];
 cfg.pff_testing = true;
 
 %set up world
 w = world(cfg);
+
+%set up potential field functions
+cfg.pff_funcs = create_pff_funcs(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -48,8 +51,9 @@ end
 b = ball(cfg.ball_start,cfg);
 
 %set up field
-%[fig, stats_handles, ax]= ShowField(cfg);
-%stats = 0;
+[fig, stats_handles, ax]= ShowField(cfg);
+stats = 0;
+hold on
 
 
 %% Main Visualization
@@ -71,13 +75,15 @@ b = update(b);
 %update collisions
 [p,b] = HandleCollisions(p,b,cfg);   
 
-%drawing update  
-%[p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
-
 %pff visualization
-num = 2; %player to visualize
+num = 4; %player to visualize
 clr = 'red';
-VisPFF(p,b,w,cfg,num,clr);
+VisPFF(p,b,w,cfg,num,clr,ax);
+
+%drawing update  
+
+[p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
+hold off
 
     
 

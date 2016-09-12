@@ -1,20 +1,3 @@
-function [ fn ] = GenPFF(obj)
-%GenPFF Generate Potential Field Function
-%  Generates potential field function for current player based on
-%  configuration variables
-%  Returns handle to funcition for local evaluation to do path planning
-
-%creates pff functions for each role
-if ~exist('obj.cfg.pff_funcs','var')
-    obj.cfg.pff_funcs = create_pff_funcs(obj.cfg);
-end
-
-fn = obj.cfg.pff_funcs{obj.role+1};
-
-end
-
-
-
 function [ fns ] = create_pff_funcs(cfg)
 %CREATE_PFF_FUNCS To be called once to generate all pff function handles
     %based off of Multi-Robot Dynamic Role Assignment by Vail and Veloso
@@ -23,13 +6,13 @@ function [ fns ] = create_pff_funcs(cfg)
 %% Individual potential field components
 
 %boundary repulstion
-Pwall = @(c1,k1,dwall) max([0,c1 - k1*dwall]);
+Pwall = @(c1,k1,dwall) max([0,k1*(c1 - dwall)]);
 
 %ball attraction
 Pball = @(c2,k2,dball) k2*abs(c2 - dball);
 
 %Teammate repulsion
-Pteam = @(c3,k3,dteam) max([0,c3-k3*dteam]);
+Pteam = @(c3,k3,dteam) max([0,k3*(c3-dteam)]);
 
 %forward bias for supporter
 Pfwbias = @(k4,dbehind_ball) max([0,k4*dbehind_ball]);
@@ -51,8 +34,6 @@ Pdef_shot = @(k9,dshotpath_def) k9*abs(dshotpath_def);
 
 %stay off to one side
 Psidebias = @(k10,Ry,By) max([0,k10*Ry*By/cfg.field_width]); %not sure I like this function, might need to adjust
-
-%everyone face the ball
 
 %goalie go to ball if close enough
 

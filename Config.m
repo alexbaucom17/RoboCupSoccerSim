@@ -97,14 +97,13 @@ cfg.world_seeBallContRate = 0.99;
 cfg.world_seeBallFOV = 120*pi/180;
 
 %Potential Field Function
-
                                 %goalie attacker defender supporter defender2   
-pff_weights.boundary_reach =    [   0.5    0.5      3         3        0];
+pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0];
 pff_weights.boundary_scale =    [   2      2        2         2        0];
-pff_weights.ball_eq_pos    =    [   0      0.5      0         0        0];
+pff_weights.ball_eq_pos    =    [   0      0.2      0         0        0];
 pff_weights.ball_scale     =    [   0      3        0         1        0];
-pff_weights.team_reach     =    [   0      1        0         2        0];
-pff_weights.team_scale     =    [   0      1        0         1        0];
+pff_weights.team_reach     =    [   0      1        0         1        0];
+pff_weights.team_scale     =    [   0      4        0         4        0];
 pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
 pff_weights.def_bias_scale =    [   0      0        1         0        0];
 pff_weights.att_shot_scale =    [   0      2.5      0         0        0];

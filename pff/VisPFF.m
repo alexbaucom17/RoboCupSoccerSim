@@ -1,4 +1,4 @@
-function [] = VisPFF(p,b,w,cfg,num,clr)
+function [] = VisPFF(p,b,w,cfg,num,clr,ax)
 %VISPFF Visualize potential field function
 
 %graph params
@@ -6,7 +6,7 @@ xmin = -cfg.field_length_max;
 xmax = cfg.field_length_max;
 ymin  = -cfg.field_width_max;
 ymax = cfg.field_width_max;
-step_size = 0.1;
+step_size = 0.05;
 
 %set up grid
 [X,Y] = meshgrid(xmin:step_size:xmax,ymin:step_size:ymax);
@@ -25,15 +25,15 @@ end
 team_pos = team_pos(:,1:2);
 
 %set up function 
-pff = p{num}.GenPFF();
+pff = p{num}.curpff;
 fn = @(x,y) pff(calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir));
 
 %run function for all x and y
 Z = arrayfun(fn,X,Y);
-figure
 colormap('default')
-imagesc(Z)
-colorbar
+%imagesc(Z)
+contourf(ax,X,Y,Z,150)
+hold on
 
 [min1,idxY] = min(Z);
 [val, idxX] = min(min1);
@@ -44,11 +44,15 @@ fprintf('The min value is %4.1f at location %4.1f,%4.1f\n',val,xval,yval);
 
 %do gradient descent to see path
 real_start = p{num}.pos(1:2);
-map_start(1) = find(X(1,:) == real_start(1));
-map_start(2) = find(Y(:,1) == real_start(2));
-[path,minval] = gradient_descent(Z,map_start);
+[~,map_start(1)] = min(abs(X(1,:) - real_start(1)));
+[~,map_start(2)] = min(abs(Y(:,1) - real_start(2)));
+[path,~] = gradient_descent(Z,map_start);
+pathX = X(1,path(:,1));
+pathY = Y(path(:,2),1);
 
-if minval == val
+scatter(ax,pathX,pathY,20,[1,0,0],'filled')
+hold off
+
 
 end
 
@@ -59,24 +63,26 @@ function [path,minval] = gradient_descent(costmap,start)
 %init
 minval = Inf;
 path = start;
+mapsize = size(costmap);
 
 %first pass
 connections = [1,0; 1,1; 0,1; -1,1; -1,0; -1,-1; 0,-1; 1,-1];
-check = repmat(start,8,1) + connections;
-vals = costmap(check);
+check2D = repmat(start,8,1) + connections;
+check1D = sub2ind(mapsize,check2D(:,2),check2D(:,1));
+vals = costmap(check1D);
 
 %check if there are still lower values
 while any(vals < minval)
     
     %find best node
-    [curval,idx] = min(vals);
-    minval = curval;
-    new_node = check(idx,:);
+    [minval,idx] = min(vals);
+    new_node = check2D(idx,:);
     path = [path; new_node];
     
     %do checks of new node
-    check = repmat(new_node,8,1) + connections;
-    vals = costmap(check);
+    check2D = repmat(new_node,8,1) + connections;
+    check1D = sub2ind(mapsize,check2D(:,2),check2D(:,1));
+    vals = costmap(check1D);
 end
 
 end
