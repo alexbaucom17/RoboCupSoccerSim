@@ -28,7 +28,7 @@ cfg.pff_testing = true;
 w = world(cfg);
 
 %set up potential field functions
-cfg.pff_funcs = create_pff_funcs(cfg);
+pff_funcs = create_pff_funcs(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -44,7 +44,7 @@ for i = 1:cfg.num_players
         teammates = cfg.num_players_blue-1;
         pos = cfg.start_pos(num+5,:);
     end
-    p{i} = player(color,pos,num,teammates,cfg);
+    p{i} = player(color,pos,num,teammates,cfg,pff_funcs);
 end
 
 %set up ball
@@ -76,12 +76,11 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 4; %player to visualize
+num = 2; %player to visualize
 clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 
-%drawing update  
-
+%drawing update
 [p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg); 
 hold off
 

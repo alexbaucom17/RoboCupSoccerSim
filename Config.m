@@ -2,7 +2,7 @@
 cfg = [];
 
 %drawing
-cfg.drawgame = false;
+cfg.drawgame = true;
 cfg.debug = false;
 
 %timing
@@ -116,6 +116,9 @@ pff_weights.offset_scale   =    [   0      0        0         1        0];
 
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
+cfg.pff_testing = false;
+cfg.num_local_samples = 20;
+cfg.local_sample_distance = 0.1;
     
 
 

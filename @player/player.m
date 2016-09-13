@@ -17,7 +17,7 @@ classdef player
         team_color %player color
         player_number %player number
         role %player role
-        curpff %potential field function for the player
+        pffs %potential field functions for all roles
     end
 
     
@@ -44,7 +44,6 @@ classdef player
         world_function_handle %handle to world function
         bh_init %flag if FSM needs to init next behavior state
         local2globalTF %transform from global coordinates to local coordinates   
-        pffs %potential field functions for all roles
     end
     
     %% Constants
@@ -73,7 +72,7 @@ classdef player
     methods
         
         %class constructor
-        function obj = player(color,pos,num,teammates,cfg)
+        function obj = player(color,pos,num,teammates,cfg,pff_funcs)
            
             %defualt values
             obj.pos = [0,0,0];
@@ -112,7 +111,6 @@ classdef player
                 obj.timestep = cfg.timestep;
                 obj.realtime = cfg.realtime; 
                 obj.role = obj.player_number - 1;
-                obj.pffs = cfg.pff_funcs;
                 if strcmp(color,'red')
                     obj.behavior_handle = obj.cfg.behavior_handle_red;
                 else
@@ -123,7 +121,8 @@ classdef player
                 else
                     obj.world_function_handle = @get_world_exact;
                 end
-            end           
+            end    
+            if nargin >= 6 obj.pffs = pff_funcs; end 
         end
         
         
@@ -135,7 +134,6 @@ classdef player
             
             %update role (computed centrally to reduce time)
             obj.role = world.cur_player.role;
-            obj.curpff = obj.pffs{obj.role+1};
             
             %make behavioral decisions based on observed data
             obj = obj.behavior_handle(obj,world);

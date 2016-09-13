@@ -104,6 +104,11 @@ amax = obj.cfg.player_accelLin;
 pROB = obj.cfg.player_hitbox_radius;
 
 %need to run these calculations for small set of points near player
+samples = linspace(-pi,pi,obj.cfg.num_local_samples);
+sample_dX = obj.cfg.local_sample_distance*cos(samples);
+sample_dY = obj.cfg.local_sample_distance*sin(samples);
+sampleX = pos_cur(1) + sample_dX;
+sampleY = pos_cur(2) + sample_dY;
 D = calculate_distances(cfg,pos_cur(1:2),pos_cur(3),ball_global,team_pos);
 
 

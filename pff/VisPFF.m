@@ -25,7 +25,7 @@ end
 team_pos = team_pos(:,1:2);
 
 %set up function 
-pff = p{num}.curpff;
+pff = p{num}.pffs{p{num}.role+1};
 fn = @(x,y) pff(calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir));
 
 %run function for all x and y
