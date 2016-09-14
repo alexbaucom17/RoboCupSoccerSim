@@ -98,7 +98,7 @@ function obj = get_vel_pff(obj,world,ball_global)
 pos_cur = world.cur_player.pos;
 vel_cur = world.cur_player.vel;
 team_idx = (1:5) ~= world.cur_player.number;
-team_pos = reshape(world.myTeam(team_idx).pos(1:2),3,[])';
+team_pos = reshape([world.myTeam(team_idx).pos],2,[])';
 team_vel = reshape([world.myTeam(team_idx').vel],3,[])';
 amax = obj.cfg.player_accelLin;
 pROB = obj.cfg.player_hitbox_radius;
@@ -107,12 +107,30 @@ pROB = obj.cfg.player_hitbox_radius;
 samples = linspace(-pi,pi,obj.cfg.num_local_samples);
 sample_dX = obj.cfg.local_sample_distance*cos(samples);
 sample_dY = obj.cfg.local_sample_distance*sin(samples);
-sampleX = pos_cur(1) + sample_dX;
+sampleX = pos_cur(1) + sample_dX; 
 sampleY = pos_cur(2) + sample_dY;
-D = calculate_distances(cfg,pos_cur(1:2),pos_cur(3),ball_global,team_pos);
 
+%find potential field near player
+pff = obj.pffs{obj.role+1};
+fn = @(x,y) pff(calculate_distances(obj.cfg,[x,y],pos_cur(3),ball_global,team_pos,obj.dir));
+P = arrayfun(fn,sampleX,sampleY);
+
+%find direction of new velocity along best gradient
+[min_val,idx] = min(P);
+cur_val = fn(pos_cur(1),pos_cur(2));
+dir = obj.dir*[sample_dX(idx),sample_dY(idx)];
+mag = obj.cfg.pff_vel_scale*max([0,cur_val-min_val]);
+obj.vel_des(1:2) = mag*dir;
+
+%set angle to just track ball
+dpBall = ball_global - pos_cur(1:2);
+ang_des = atan2(dpBall(2),dpBall(1)); 
+da = ang_des-pos_cur(3);
+if abs(da) > pi
+    da = -sign(da)*(2*pi-abs(da));
+end
+obj.vel_des(3) = da;
 
 end
-
 
 

@@ -7,11 +7,14 @@ clear
 rng('shuffle')
 
 %set up configuration variables
-addpath game
+addpath game pff
 Config();
 
 %set up world
 w = world(cfg);
+
+%set up potential field functions
+pff_funcs = create_pff_funcs(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -27,7 +30,7 @@ for i = 1:cfg.num_players
         teammates = cfg.num_players_blue-1;
         pos = cfg.start_pos(num+5,:);
     end
-    p{i} = player(color,pos,num,teammates,cfg);
+    p{i} = player(color,pos,num,teammates,cfg,pff_funcs);
 end
 
 %set up ball

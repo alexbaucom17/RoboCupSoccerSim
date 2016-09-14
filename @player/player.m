@@ -43,7 +43,8 @@ classdef player
         pos_des %desired position
         world_function_handle %handle to world function
         bh_init %flag if FSM needs to init next behavior state
-        local2globalTF %transform from global coordinates to local coordinates   
+        local2globalTF %transform from global coordinates to local coordinates  
+        dir %direction player is attacking
     end
     
     %% Constants
@@ -113,8 +114,10 @@ classdef player
                 obj.role = obj.player_number - 1;
                 if strcmp(color,'red')
                     obj.behavior_handle = obj.cfg.behavior_handle_red;
+                    obj.dir = 1;
                 else
                     obj.behavior_handle = obj.cfg.behavior_handle_blue;
+                    obj.dir = -1;
                 end  
                 if obj.cfg.world_random_on
                     obj.world_function_handle = @get_world_random;

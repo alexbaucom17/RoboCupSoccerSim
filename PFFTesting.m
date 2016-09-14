@@ -76,8 +76,8 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 2; %player to visualize
-clr = 'red';
+num = 3; %player to visualize
+clr = 'blue';
 VisPFF(p,b,w,cfg,num,clr,ax);
 
 %drawing update

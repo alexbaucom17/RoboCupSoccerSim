@@ -2,7 +2,7 @@
 cfg = [];
 
 %drawing
-cfg.drawgame = true;
+cfg.drawgame = false;
 cfg.debug = false;
 
 %timing
@@ -71,8 +71,8 @@ cfg.oobLineY = cfg.field_width-0.25;
 cfg.oobLineX = cfg.field_length - 0.5;
 
 %behavior
-cfg.behavior_handle_red = @behavior_simple;
-cfg.behavior_handle_blue = @behavior_test_pff;
+cfg.behavior_handle_red = @behavior_simple; 
+cfg.behavior_handle_blue = @behavior_test_pff2;
 cfg.closetoPos = 0.1; %m
 cfg.closetoAng = 10*pi/180;
 cfg.ballLostTime = 1; %sec
@@ -98,27 +98,28 @@ cfg.world_seeBallFOV = 120*pi/180;
 
 %Potential Field Function
                                 %goalie attacker defender supporter defender2   
-pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0];
-pff_weights.boundary_scale =    [   2      2        2         2        0];
+pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0.5];
+pff_weights.boundary_scale =    [   2      2        2         2        2];
 pff_weights.ball_eq_pos    =    [   0      0.2      0         0        0];
 pff_weights.ball_scale     =    [   0      3        0         1        0];
-pff_weights.team_reach     =    [   0      1        0         1        0];
-pff_weights.team_scale     =    [   0      4        0         4        0];
+pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
+pff_weights.team_scale     =    [   0      2        3         3        3];
 pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
-pff_weights.def_bias_scale =    [   0      0        1         0        0];
+pff_weights.def_bias_scale =    [   1      0        1         0        1];
 pff_weights.att_shot_scale =    [   0      2.5      0         0        0];
-pff_weights.att_bias_scale =    [   0      4        0         0        1];
-pff_weights.att_bias_reach =    [   0      1        0         0        1];
+pff_weights.att_bias_scale =    [   0      4        0         0        0];
+pff_weights.att_bias_reach =    [   0      1        0         0        0];
 pff_weights.sup_shot_dist  =    [   0      0        0         2        0];
 pff_weights.sup_shot_scale =    [   0      0        0         1        0];
-pff_weights.def_shot_scale =    [   0      0        1         0        0];
+pff_weights.def_shot_scale =    [   1      0        1         0        1];
 pff_weights.offset_scale   =    [   0      0        0         1        0];
 
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
 cfg.pff_testing = false;
-cfg.num_local_samples = 20;
+cfg.num_local_samples = 10;
 cfg.local_sample_distance = 0.1;
+cfg.pff_vel_scale = 10;
     
 
 
