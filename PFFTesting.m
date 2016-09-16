@@ -21,7 +21,7 @@ cfg.start_pos(9,:) = [2,-1,pi];     %blue supporter
 cfg.start_pos(10,:) = [3,-0.5,pi];  %blue defender2
 cfg.start_pos(6,:) = [3,0.5,pi];    %blue goalie
 cfg.debug = true;
-cfg.ball_start = [2.2,2];
+cfg.ball_start = [1,2];
 cfg.pff_testing = true;
 
 %set up world
@@ -76,8 +76,8 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 3; %player to visualize
-clr = 'blue';
+num = 2; %player to visualize
+clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 
 %drawing update

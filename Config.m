@@ -2,7 +2,7 @@
 cfg = [];
 
 %drawing
-cfg.drawgame = false;
+cfg.drawgame = true;
 cfg.debug = false;
 
 %timing
@@ -101,7 +101,7 @@ cfg.world_seeBallFOV = 120*pi/180;
 pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0.5];
 pff_weights.boundary_scale =    [   2      2        2         2        2];
 pff_weights.ball_eq_pos    =    [   0      0.2      0         0        0];
-pff_weights.ball_scale     =    [   0      3        0         1        0];
+pff_weights.ball_scale     =    [   0      4        0         1        0];
 pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
 pff_weights.team_scale     =    [   0      2        3         3        3];
 pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
@@ -118,7 +118,7 @@ cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
 cfg.pff_testing = false;
 cfg.num_local_samples = 10;
-cfg.local_sample_distance = 0.1;
+cfg.local_sample_distance = 0.05;
 cfg.pff_vel_scale = 10;
     
 

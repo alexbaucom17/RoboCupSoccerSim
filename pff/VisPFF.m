@@ -13,11 +13,12 @@ step_size = 0.05;
 
 %get info about players
 ball_global = b.pos;
-team_idx = (1:5) ~= num;
 if strcmp(clr,'red')
+    team_idx = (1:cfg.num_players_red) ~= num;
     team_pos = reshape([w.world_exact.redTeam(team_idx).pos],3,[])';
     dir = 1;
 else
+    team_idx = (1:cfg.num_players_blue) ~= num;
     team_pos = reshape([w.world_exact.blueTeam(team_idx).pos],3,[])';
     dir = -1;
     num = num + cfg.num_players_red;

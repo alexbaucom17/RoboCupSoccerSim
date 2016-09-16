@@ -49,9 +49,9 @@ for i = 1:5
     w = cfg.pff_weights(:,i);
     
     %update functions with proper weights
-    Pwall2 = @(d) Pwall(w(1),w(2),d);
+    Pwall2 = @(d) Pwall(w(1),w(2),d(1))+Pwall(w(1),w(2),d(2))+Pwall(w(1),w(2),d(3))+Pwall(w(1),w(2),d(4));
     Pball2 = @(d) Pball(w(3),w(4),d);
-    Pteam2 = @(d) Pteam(w(5),w(6),d);
+    Pteam2 = @(d) sum(arrayfun(@(p) Pteam(w(5),w(6),p),d));
     Pfwbias2 = @(d) Pfwbias(w(7),d);
     Pdbias2 = @(d) Pdbias(w(8),d);
     Pshot2 = @(d) Pshot(w(9),d);
@@ -60,13 +60,8 @@ for i = 1:5
     Pdef_shot2 = @(d) Pdef_shot(w(14),d);
     Psidebias2 = @(Ry,By) Psidebias(w(15),Ry,By);
     
-    %since there are multiple walls and teammates we need to use arrayfun
-    %for these
-    Pwall3 = @(d) sum(arrayfun(Pwall2,d));
-    Pteam3 = @(d) sum(arrayfun(Pteam2,d));
-    
     %put it all together
-    fns{i} = @(D) Pwall3(D.boundaries)+Pball2(D.ball)+Pteam3(D.team) ...
+    fns{i} = @(D) Pwall2(D.boundaries)+Pball2(D.ball)+Pteam2(D.team) ...
              +Pfwbias2(D.behindball)+Pdbias2(D.goalline)+Pshot2(D.shotpath) ...
              +Prevbias2(D.behindball)+Pshot_sup2(D.shotpath)+Pdef_shot2(D.shotpath_def)...
              +Psidebias2(D.Ry,D.By);

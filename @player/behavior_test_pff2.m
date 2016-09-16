@@ -43,14 +43,16 @@ end
 %do calculations
 obj = get_vel_pff(obj,world,ball_global);
 
+obj.nearPos = norm(world.cur_player.pos(1:2) - ball_global) < obj.cfg.closetoPos;
+
 %check to see if we need to transition
-if obj.nearAng && obj.nearPos && obj.role == player.ATTACKER
+if obj.nearPos && obj.role == player.ATTACKER
     obj.behaviorState = player.KICK;
     obj.bh_init = true; 
 end
 
 %check to see if we need to transition
-if obj.nearAng && obj.nearPos && obj.role == player.GOALIE
+if obj.nearPos && obj.role == player.GOALIE
     obj.behaviorState = player.KICK;
     obj.bh_init = true; 
 end
@@ -97,9 +99,10 @@ function obj = get_vel_pff(obj,world,ball_global)
 %collect information
 pos_cur = world.cur_player.pos;
 vel_cur = world.cur_player.vel;
-team_idx = (1:5) ~= world.cur_player.number;
-team_pos = reshape([world.myTeam(team_idx).pos],2,[])';
-team_vel = reshape([world.myTeam(team_idx').vel],3,[])';
+team_idx = (1:obj.num_teammates+1) ~= world.cur_player.number;
+team_pos = reshape([world.myTeam(team_idx).pos],3,[])';
+team_pos = team_pos(:,1:2);
+team_vel = reshape([world.myTeam(team_idx).vel],3,[])';
 amax = obj.cfg.player_accelLin;
 pROB = obj.cfg.player_hitbox_radius;
 
@@ -113,7 +116,10 @@ sampleY = pos_cur(2) + sample_dY;
 %find potential field near player
 pff = obj.pffs{obj.role+1};
 fn = @(x,y) pff(calculate_distances(obj.cfg,[x,y],pos_cur(3),ball_global,team_pos,obj.dir));
-P = arrayfun(fn,sampleX,sampleY);
+P = zeros(length(sampleX),1);
+for i = 1:length(sampleX)
+    P(i) = fn(sampleX(i),sampleY(i));
+end
 
 %find direction of new velocity along best gradient
 [min_val,idx] = min(P);
