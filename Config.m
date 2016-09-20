@@ -2,7 +2,7 @@
 cfg = [];
 
 %drawing
-cfg.drawgame = true;
+cfg.drawgame = false;
 cfg.debug = false;
 
 %timing
@@ -17,8 +17,8 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 5;
-cfg.num_players_blue = 5;
+cfg.num_players_red = 3;
+cfg.num_players_blue = 3;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
 
 %starting positions
@@ -82,7 +82,7 @@ cfg.SupportDistX = 0.75;
 cfg.SupportDistY = 0.5;
 cfg.DefenderFrac = 0.5;
 cfg.Defender2Frac = 0.25;
-cfg.nonAttackerPenalty = 1;
+cfg.nonAttackerPenalty = 0.7;
 cfg.nonDefenderPenalty = 1;
 
 %world stocasticity
@@ -99,19 +99,19 @@ cfg.world_seeBallFOV = 120*pi/180;
 %Potential Field Function
                                 %goalie attacker defender supporter defender2   
 pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0.5];
-pff_weights.boundary_scale =    [   2      2        2         2        2];
-pff_weights.ball_eq_pos    =    [   0      0.2      0         0        0];
-pff_weights.ball_scale     =    [   0      4        0         1        0];
+pff_weights.boundary_scale =    [   2      2        3         2        3];
+pff_weights.ball_eq_pos    =    [   0      0.1      2         0        1];
+pff_weights.ball_scale     =    [   0      4        1         1        1];
 pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
-pff_weights.team_scale     =    [   0      2        3         3        3];
+pff_weights.team_scale     =    [   0      1        3         3        3];
 pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
 pff_weights.def_bias_scale =    [   1      0        1         0        1];
 pff_weights.att_shot_scale =    [   0      2.5      0         0        0];
-pff_weights.att_bias_scale =    [   0      4        0         0        0];
-pff_weights.att_bias_reach =    [   0      1        0         0        0];
+pff_weights.att_bias_scale =    [   0      0        0         0        0];
+pff_weights.att_bias_reach =    [   0      0        0         0        0];
 pff_weights.sup_shot_dist  =    [   0      0        0         2        0];
 pff_weights.sup_shot_scale =    [   0      0        0         1        0];
-pff_weights.def_shot_scale =    [   1      0        1         0        1];
+pff_weights.def_shot_scale =    [   1      0        1         0        0.5];
 pff_weights.offset_scale   =    [   0      0        0         1        0];
 
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
@@ -120,8 +120,22 @@ cfg.pff_testing = false;
 cfg.num_local_samples = 10;
 cfg.local_sample_distance = 0.05;
 cfg.pff_vel_scale = 10;
+cfg.use_static_functions = 1;
     
+%Game Scoring
+cfg.goalsForPts = 1000;
+cfg.goalsAgainstPts = -1000;
+cfg.oobPts = -100;
+cfg.close2ballthresh = 1; %m
+cfg.close2ballPts = 0.1;
 
-
+%Nelder mead learning parameters
+cfg.NM_initial = reshape(cfg.pff_weights(:,1:cfg.num_players_red),1,[]);
+cfg.NM_dim = length(cfg.NM_initial);
+cfg.NM_initial_step_size = 1;
+cfg.NM_alpha = 1;
+cfg.NM_beta = 0.5;
+cfg.NM_gamma = 2;
+cfg.NM_delta = 0.5;
 
 

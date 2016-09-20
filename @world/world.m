@@ -7,6 +7,7 @@ classdef world
         blue_score %score for the blue team
         world_exact %struct with 'exact' information about the world
         world_random %struct with randomized variations of exact world info
+        num_oob %keeps track of how many out of bounds by each team
     end
     
     properties (Access = protected)     
@@ -36,6 +37,7 @@ classdef world
             obj.world_exact.seeball = ones(obj.cfg.num_players,1);
             obj.line_handles = [];
             obj.roles = [1:obj.cfg.num_players_red,1:obj.cfg.num_players_blue]'-1;
+            obj.num_oob = [0,0];
         end
         
         %update function for the world
@@ -120,6 +122,10 @@ classdef world
 
         end
 
+        %function to get id of attacking players 
+        function ids = get_attacker_ids(obj)
+             ids = find(obj.roles == player.ATTACKER);
+        end
         
         %Get an exact observation of the current world state
         %
@@ -145,7 +151,7 @@ classdef world
         function world_info = get_world_exact(obj,clr,num)
             
             %find attackers
-            attackerIDs = find(obj.roles == player.ATTACKER);
+            attackerIDs = obj.get_attacker_ids();
             
             %get proper goals
             if strcmp(clr,'red')
@@ -319,7 +325,7 @@ classdef world
                 end
 
                 if n >= 2
-                    %closest to goal is defender2 unless it is the attacker
+                    %closest to goal is defender unless it is the attacker
                     if def_idx(1) ~= eta_idx(1)
                         cur_roles(def_idx(1)) = player.DEFENDER;
                     else

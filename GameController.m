@@ -14,7 +14,7 @@ Config();
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = create_pff_funcs(cfg);
+pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -73,6 +73,9 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
     %update collisions
     [p,b] = HandleCollisions(p,b,cfg);   
     
+    %update team scoring system
+    score = ScoreGame(w,cfg);
+    
     %statistics calculations
     stats.timeelapsed = toc(t);
     stats.gametime = p{1}.gametime;
@@ -96,6 +99,7 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
 end
 
 disp(stats)
+disp(score)
 if cfg.record_movie
    close(writerObj); % Saves the movie.
 end

@@ -3,11 +3,11 @@
 close all
 clear
 rng('shuffle')
-addpath game
+addpath game pff
 disp('Initializing...')
 
 %set up configuration variables
-batch_size = 100; %ideally this should be a multiple of however many workers are in the parallel pool
+batch_size = 10; %ideally this should be a multiple of however many workers are in the parallel pool
 
 %list team behaviors to test
 bh_list = {'behavior_simple', ...

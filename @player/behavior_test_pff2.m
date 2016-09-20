@@ -43,7 +43,7 @@ end
 %do calculations
 obj = get_vel_pff(obj,world,ball_global);
 
-obj.nearPos = norm(world.cur_player.pos(1:2) - ball_global) < obj.cfg.closetoPos;
+obj.nearPos = norm(world.cur_player.pos(1:2) - ball_global) < 2*obj.cfg.closetoPos;
 
 %check to see if we need to transition
 if obj.nearPos && obj.role == player.ATTACKER
@@ -135,7 +135,7 @@ da = ang_des-pos_cur(3);
 if abs(da) > pi
     da = -sign(da)*(2*pi-abs(da));
 end
-obj.vel_des(3) = da;
+obj.vel_des(3) = 5*da;
 
 end
 

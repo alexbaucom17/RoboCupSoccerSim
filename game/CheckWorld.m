@@ -106,6 +106,7 @@ end
 oobX = abs(ppos(:,1)) > cfg.field_length_max;
 oobY = abs(ppos(:,2)) > cfg.field_width_max;
 oob = oobX | oobY;
+num_oob = [0,0];
 
 %reset all players that went out of bounds
 if sum(oob) > 0
@@ -117,8 +118,10 @@ if sum(oob) > 0
         %figure out where player needs to be placed
         if strcmp(p_cur.team_color,'red')
             sideX = -1;
+            num_oob(1) = num_oob(1) + 1;
         else
             sideX = 1;
+            num_oob(2) = num_oob(2) + 1;
         end
         sideY = -sign(b.pos(2));
         ang = -sideY*pi/2;
@@ -127,6 +130,7 @@ if sum(oob) > 0
         p{cur_idx}.pos = [sideX*cfg.penalty_corners(3,1),sideY*cfg.field_width,ang];
         p{cur_idx}.SetZeroVel();
     end
+    w.num_oob = w.num_oob + num_oob;
 end
 
 end

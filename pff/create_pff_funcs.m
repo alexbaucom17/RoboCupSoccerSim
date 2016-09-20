@@ -1,6 +1,16 @@
-function [ fns ] = create_pff_funcs(cfg)
+function [ fns ] = create_pff_funcs(cfg,static_flag)
 %CREATE_PFF_FUNCS To be called once to generate all pff function handles
     %based off of Multi-Robot Dynamic Role Assignment by Vail and Veloso
+    %flag arguement is to specify whether to use static functions or
+    %annonymous functions
+    
+    
+%%  Get static functions if requests
+
+if nargin == 2 && static_flag == 1
+    fns = get_static_functions(cfg);
+    return
+end
 
 
 %% Individual potential field components
@@ -35,10 +45,6 @@ Pdef_shot = @(k9,dshotpath_def) k9*abs(dshotpath_def);
 %stay off to one side
 Psidebias = @(k10,Ry,By) max([0,k10*Ry*By/cfg.field_width]); %not sure I like this function, might need to adjust
 
-%goalie go to ball if close enough
-
-%something to keep attacker off to side of ball if not behind it 
-
 
 %% Put functions together
 
@@ -46,26 +52,50 @@ Psidebias = @(k10,Ry,By) max([0,k10*Ry*By/cfg.field_width]); %not sure I like th
 for i = 1:5
     
     %grab weights for this role
-    w = cfg.pff_weights(:,i);
+    w = cfg.pff_weights(:,i);    
     
-    %update functions with proper weights
-    Pwall2 = @(d) Pwall(w(1),w(2),d(1))+Pwall(w(1),w(2),d(2))+Pwall(w(1),w(2),d(3))+Pwall(w(1),w(2),d(4));
-    Pball2 = @(d) Pball(w(3),w(4),d);
-    Pteam2 = @(d) sum(arrayfun(@(p) Pteam(w(5),w(6),p),d));
-    Pfwbias2 = @(d) Pfwbias(w(7),d);
-    Pdbias2 = @(d) Pdbias(w(8),d);
-    Pshot2 = @(d) Pshot(w(9),d);
-    Prevbias2 = @(d) Prevbias(w(10),w(11),d);
-    Pshot_sup2 = @(d) Pshot_sup(w(12),w(13),d);
-    Pdef_shot2 = @(d) Pdef_shot(w(14),d);
-    Psidebias2 = @(Ry,By) Psidebias(w(15),Ry,By);
+    fns{i} = @(D) Pwall(w(1),w(2),D.boundaries(1))+Pwall(w(1),w(2),D.boundaries(2))...
+        +Pwall(w(1),w(2),D.boundaries(3))+Pwall(w(1),w(2),D.boundaries(4))...
+        +Pball(w(3),w(4),D.ball)+sum(arrayfun(@(p) Pteam(w(5),w(6),p),D.team))...
+        +Pfwbias(w(7),D.behindball)+Pdbias(w(8),D.goalline)+Pshot(w(9),D.shotpath)...
+        +Prevbias(w(10),w(11),D.behindball)+Pshot_sup(w(12),w(13),D.shotpath)...
+        +Pdef_shot(w(14),D.shotpath_def)+Psidebias(w(15),D.Ry,D.By);
     
-    %put it all together
-    fns{i} = @(D) Pwall2(D.boundaries)+Pball2(D.ball)+Pteam2(D.team) ...
-             +Pfwbias2(D.behindball)+Pdbias2(D.goalline)+Pshot2(D.shotpath) ...
-             +Prevbias2(D.behindball)+Pshot_sup2(D.shotpath)+Pdef_shot2(D.shotpath_def)...
-             +Psidebias2(D.Ry,D.By);
 end
     
 
 end
+
+
+function fns = get_static_functions(cfg)
+
+if cfg.num_players_red ~= cfg.num_players_blue
+    error('Number of players on each team must be equal to use static pff functions')
+end
+
+z = zeros(cfg.num_players_red-1,1);
+
+%make function for each role
+for i = 1:5
+    
+    %grab weights for this role
+    w = cfg.pff_weights(:,i);    
+    
+    fns{i} = @(D)   max([0,w(2)*(w(1) - D.boundaries(1))])+...
+                    max([0,w(2)*(w(1) - D.boundaries(2))])+...
+                    max([0,w(2)*(w(1) - D.boundaries(3))])+...
+                    max([0,w(2)*(w(1) - D.boundaries(4))])+...
+                    w(4)*abs(w(2) - D.ball)+...
+                    sum(max([z,w(6)*(w(5)-D.team)]))+...
+                    max([0,w(7)*D.behindball])+...
+                    w(8)*D.goalline+...
+                    w(9)*D.shotpath+...
+                    max([0,w(11)-w(10)*D.behindball])+...
+                    w(12)*abs(w(13)-D.shotpath)+...
+                    w(14)*abs(D.shotpath_def)+...
+                    max([0,w(15)*D.Ry*D.By/cfg.field_width]);               
+end
+
+
+end
+

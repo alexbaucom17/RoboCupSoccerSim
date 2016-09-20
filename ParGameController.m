@@ -1,11 +1,20 @@
-function stats = ParGameController(c,bh1,bh2)
+function [stats,score] = ParGameController(c,bh1,bh2,weights)
 
+%handle inputs
 cfg = c.Value;
 cfg.behavior_handle_red = bh1;
 cfg.behavior_handle_blue = bh2;
 
+%override defualt weights if needed
+if nargin > 3
+    cfg.pff_weights = weights;
+end
+
 %set up world
 w = world(cfg);
+
+%set up potential field functions
+pff_funcs = create_pff_funcs(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -21,7 +30,7 @@ for i = 1:cfg.num_players
         teammates = cfg.num_players_blue-1;
         pos = cfg.start_pos(num+5,:);
     end
-    p{i} = player(color,pos,num,teammates,cfg);
+    p{i} = player(color,pos,num,teammates,cfg,pff_funcs);
 end
 
 %set up ball
@@ -57,7 +66,10 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
     b = b.update();
     
     %update collisions
-    [p,b] = HandleCollisions(p,b,cfg);   
+    [p,b] = HandleCollisions(p,b,cfg);  
+    
+    %update team scoring system
+    score = ScoreGame(w,cfg);
     
     %statistics calculations
     stats.timeelapsed = toc(t);
