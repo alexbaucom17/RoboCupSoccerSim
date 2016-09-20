@@ -19,7 +19,7 @@ max_iter = 100;
 %future iterations could possibly be tested against the best node from
 %previous trials
 default_behavior_str = 'behavior_simple';
-defualt_behavior = str2func(default_behavior_str);
+default_behavior = str2func(default_behavior_str);
 
 %test behavior is which behavior to run learning on
 test_behavior_str = 'behavior_test_pff2';
@@ -38,13 +38,14 @@ term_x = false; %terminate based on domain
 term_f = false; %terminate based on function value
 
 %start parpool if needed and add needed files + data
-p = gcp();
-C = parallel.pool.Constant(cfg);
-if isempty(p.AttachedFiles)
-    p.addAttachedFiles({default_behavior_str,test_behavior_str});
-else
-    p.updateAttachedFiles();
-end  
+% p = gcp();
+% C = parallel.pool.Constant(cfg);
+% if isempty(p.AttachedFiles)
+%     p.addAttachedFiles({default_behavior_str,test_behavior_str});
+% else
+%     p.updateAttachedFiles();
+% end  
+C = 0;
 
 %% Set up initial simplex
 
@@ -65,7 +66,7 @@ while n < max_iter && term_x == false && term_f == false
     S = simplex_transformation(S,cfg,C,default_behavior,test_behavior,batch_size);    
     
     %Test for termination
-    [term_x, term_f] = termination_test(S);
+    [term_x, term_f] = termination_test(S,cfg);
     
     %increment loop counter
     n = n+1; 

@@ -13,12 +13,15 @@ if w_size(2) < 5
 end
 
 %run batch
-scores = zeros(1,batch_size);
-parfor j = 1:batch_size
-    [~,score1] = ParGameController(C,default_behavior,test_behavior,w);
-    [~,score2] = ParGameController(C,test_behavior,default_behavior,w);
-    scores(j) = score1+score2;
-end
+% scores = zeros(1,batch_size);
+% parfor j = 1:batch_size
+%     [~,score1] = ParGameController(C,default_behavior,test_behavior,w);
+%     [~,score2] = ParGameController(C,test_behavior,default_behavior,w);
+%     scores(j) = score1+score2;
+% end
+
+%for testing
+scores = rand*w_test;
 
 %add up batch scores (negative since we need minimzation)
 score = -sum(scores);

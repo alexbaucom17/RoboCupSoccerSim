@@ -70,7 +70,44 @@ end
 %contraction
 if Fr >= Fs
     
+    %determine whether we need outside or inside contraction
+    if Fs <= Fr && Fr < Fh
+        
+        %outside contraction point
+        Xc = C + cfg.NM_beta*(Xr-C);
+        Fc = score_vertex(Xc,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+    
+        %check validity
+        if Fc <= Fr
+            %keep if better than reflection point
+            S_sorted(h).vertex = Xc;
+            S_sorted(h).score = Fc;
+            return
+        else
+            %otherwise throw an error to indicate we need a shrink
+            %operation to continue
+            error('Shrink operation required')            
+        end
+    else %this means that Fr >= Fh
+        
+        %inside contraction point
+        Xc = C + cfg.NM_beta*(C-Xh);
+        Fc = score_vertex(Xc,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+    
+        %check validity
+        if Fc < Fh
+            %keep if better than reflection point
+            S_sorted(h).vertex = Xc;
+            S_sorted(h).score = Fc;
+            return
+        else
+            %otherwise throw an error to indicate we need a shrink
+            %operation to continue
+            error('Shrink operation required')            
+        end
+    end      
 
+end
 
 end
 

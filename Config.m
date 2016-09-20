@@ -137,5 +137,7 @@ cfg.NM_alpha = 1;
 cfg.NM_beta = 0.5;
 cfg.NM_gamma = 2;
 cfg.NM_delta = 0.5;
+cfg.NM_fn_thresh = 100;
+cfg.NM_domain_thresh = 1;
 
 
