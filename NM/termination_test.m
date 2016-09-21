@@ -10,12 +10,13 @@ term_x = false;
 term_f = false;
 
 %sort vertices by score
-S_sorted = StructSort(S,'score');
+S_sorted = sortStruct(S,'score');
 
 %compute score range and check if it is small enough
 score_range = S_sorted(end).score - S_sorted(1).score;
 if abs(score_range) < cfg.NM_fn_thresh
     term_f = true;
+    fprintf('Function scores have converged with a range of %4.1f\n',score_range)
 end
 
 %compute domain range and check to see if it is small enough
@@ -27,6 +28,7 @@ end
 norm_range = range(norms);
 if abs(norm_range) < cfg.NM_domain_thresh
     term_x = true;
+    fprintf('Search domain has converged with a norm range of %4.3f\n',norm_range)
 end
 
 end

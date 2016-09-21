@@ -40,6 +40,7 @@ Fr = score_vertex(Xr,ConfigConstant,default_behavior,test_behavior,batch_size,cf
 %check to see if this is a good point
 if Fr < Fs && Fr >= Fl    
     %if so just replace the bad point and terminate
+    disp('Reflection point was good')
     S_sorted(h).vertex = Xr;
     S_sorted(h).score = Fr;
     return
@@ -56,10 +57,12 @@ if Fr < Fl
     %check to see if the expansion was worth it
     if Fe < Fl
         %keep expansion if the score improved
+        disp('Expansion point was good')
         S_sorted(h).vertex = Xe;
         S_sorted(h).score = Fe;
     else
         %just keep the reflection if score wasn't better
+        disp('Keeping refecltion point over expansion')
         S_sorted(h).vertex = Xr;
         S_sorted(h).score = Fr;
     end
@@ -80,13 +83,17 @@ if Fr >= Fs
         %check validity
         if Fc <= Fr
             %keep if better than reflection point
+            disp('Outside contraction was good')
             S_sorted(h).vertex = Xc;
             S_sorted(h).score = Fc;
             return
         else
             %otherwise throw an error to indicate we need a shrink
             %operation to continue
-            error('Shrink operation required')            
+            warning('Shrink operation required, keeping contraction instead')  
+            S_sorted(h).vertex = Xc;
+            S_sorted(h).score = Fc;
+            return
         end
     else %this means that Fr >= Fh
         
@@ -97,13 +104,17 @@ if Fr >= Fs
         %check validity
         if Fc < Fh
             %keep if better than reflection point
+            disp('Inside contraction was good')
             S_sorted(h).vertex = Xc;
             S_sorted(h).score = Fc;
             return
         else
             %otherwise throw an error to indicate we need a shrink
             %operation to continue
-            error('Shrink operation required')            
+            warning('Shrink operation required, keeping contraction instead')   
+            S_sorted(h).vertex = Xc;
+            S_sorted(h).score = Fc;
+            return
         end
     end      
 

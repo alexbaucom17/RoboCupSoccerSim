@@ -28,7 +28,7 @@ cfg.pff_testing = true;
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = create_pff_funcs(cfg);
+pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -76,7 +76,7 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 5; %player to visualize
+num = 1; %player to visualize
 clr = 'blue';
 VisPFF(p,b,w,cfg,num,clr,ax);
 

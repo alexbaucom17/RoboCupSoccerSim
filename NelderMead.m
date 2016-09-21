@@ -10,7 +10,7 @@ disp('Initializing...')
 %batch size is the number of games that will be played to get a score for
 %the current node, ideally this should be a multiple of however many
 %workers are in the parallel pool
-batch_size = 8; 
+batch_size = 4; 
 
 %When to stop searching
 max_iter = 100;
@@ -38,14 +38,13 @@ term_x = false; %terminate based on domain
 term_f = false; %terminate based on function value
 
 %start parpool if needed and add needed files + data
-% p = gcp();
-% C = parallel.pool.Constant(cfg);
-% if isempty(p.AttachedFiles)
-%     p.addAttachedFiles({default_behavior_str,test_behavior_str});
-% else
-%     p.updateAttachedFiles();
-% end  
-C = 0;
+p = gcp();
+C = parallel.pool.Constant(cfg);
+if isempty(p.AttachedFiles)
+    p.addAttachedFiles({default_behavior_str,test_behavior_str});
+else
+    p.updateAttachedFiles();
+end  
 
 %% Set up initial simplex
 
@@ -54,13 +53,16 @@ S = generate_simplex(cfg);
 
 %get scores for all vertices
 for i = 1:(cfg.NM_dim+1)
+    fprintf('Scoring vertex %i out of %i\n',i,cfg.NM_dim+1)
     S(i).score = score_vertex(S(i).vertex,C,default_behavior,test_behavior,batch_size,cfg);
 end
 
 %% Run learning loop
 
 disp('Entering main loop')
-while n < max_iter && term_x == false && term_f == false
+while n <= max_iter && term_x == false && term_f == false
+    
+    fprintf('%i: ',n)
     
     %perform simplex transformation based off of vertex scores
     S = simplex_transformation(S,cfg,C,default_behavior,test_behavior,batch_size);    
@@ -70,6 +72,12 @@ while n < max_iter && term_x == false && term_f == false
     
     %increment loop counter
     n = n+1; 
+end
+
+if term_x || term_f
+    disp('Search has completed')
+else
+    disp('Search has reached max iterations')
 end
 
 %estimate final parameters based on simplex

@@ -1,7 +1,11 @@
 function [stats,score] = ParGameController(c,bh1,bh2,weights)
 
 %handle inputs
-cfg = c.Value;
+if isprop(c,'Value')
+    cfg = c.Value;
+else
+    cfg = c;
+end
 cfg.behavior_handle_red = bh1;
 cfg.behavior_handle_blue = bh2;
 
@@ -14,7 +18,7 @@ end
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = create_pff_funcs(cfg);
+pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
 
 %set up players
 p = cell(cfg.num_players,1);

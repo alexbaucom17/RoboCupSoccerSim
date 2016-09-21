@@ -2,7 +2,7 @@
 cfg = [];
 
 %drawing
-cfg.drawgame = false;
+cfg.drawgame = true;
 cfg.debug = false;
 
 %timing
@@ -104,8 +104,8 @@ pff_weights.ball_eq_pos    =    [   0      0.1      2         0        1];
 pff_weights.ball_scale     =    [   0      4        1         1        1];
 pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
 pff_weights.team_scale     =    [   0      1        3         3        3];
-pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
 pff_weights.def_bias_scale =    [   1      0        1         0        1];
+pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
 pff_weights.att_shot_scale =    [   0      2.5      0         0        0];
 pff_weights.att_bias_scale =    [   0      0        0         0        0];
 pff_weights.att_bias_reach =    [   0      0        0         0        0];
@@ -114,6 +114,8 @@ pff_weights.sup_shot_scale =    [   0      0        0         1        0];
 pff_weights.def_shot_scale =    [   1      0        1         0        0.5];
 pff_weights.offset_scale   =    [   0      0        0         1        0];
 
+
+%load NM_test1_weights.mat
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
 cfg.pff_testing = false;
@@ -127,7 +129,7 @@ cfg.goalsForPts = 1000;
 cfg.goalsAgainstPts = -1000;
 cfg.oobPts = -100;
 cfg.close2ballthresh = 1; %m
-cfg.close2ballPts = 0.1;
+cfg.close2ballPts = 0;
 
 %Nelder mead learning parameters
 cfg.NM_initial = reshape(cfg.pff_weights(:,1:cfg.num_players_red),1,[]);
@@ -137,7 +139,7 @@ cfg.NM_alpha = 1;
 cfg.NM_beta = 0.5;
 cfg.NM_gamma = 2;
 cfg.NM_delta = 0.5;
-cfg.NM_fn_thresh = 100;
-cfg.NM_domain_thresh = 1;
+cfg.NM_fn_thresh = 10;
+cfg.NM_domain_thresh = 0.01;
 
 
