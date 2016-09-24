@@ -15,8 +15,8 @@ end
 %run batch
 scores = zeros(1,batch_size);
 parfor j = 1:batch_size
-    [~,score1] = ParGameController(cfg,default_behavior,test_behavior,w);
-    [~,score2] = ParGameController(cfg,test_behavior,default_behavior,w);
+    [~,score1] = ParGameController(C,default_behavior,test_behavior,w);
+    [~,score2] = ParGameController(C,test_behavior,default_behavior,w);
     scores(j) = score1.total(2)+score2.total(1);
 end
 

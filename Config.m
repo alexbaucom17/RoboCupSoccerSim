@@ -114,7 +114,6 @@ pff_weights.sup_shot_scale =    [   0      0        0         1        0];
 pff_weights.def_shot_scale =    [   1      0        1         0        0.5];
 pff_weights.offset_scale   =    [   0      0        0         1        0];
 
-
 %load NM_test1_weights.mat
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
