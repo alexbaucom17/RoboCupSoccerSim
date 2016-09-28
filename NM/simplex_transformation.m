@@ -1,4 +1,4 @@
-function [S_sorted] = simplex_transformation(S,cfg,ConfigConstant,default_behavior,test_behavior,batch_size)
+function [S_sorted] = simplex_transformation(S,cfg,ConfigConstant,bh_list,batch_size)
 %SIMPLEX_TRANSFORMATION Performs Nelder Mead simplex transformations
 %   Detailed explanation goes here
 
@@ -35,7 +35,7 @@ C = 1/n*sum(S_mat(1:s,:),1);
 Xr = C + cfg.NM_alpha*(C-Xh);
 
 %score new reflection point
-Fr = score_vertex(Xr,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+Fr = score_vertex(Xr,ConfigConstant,bh_list,batch_size,cfg);
 
 %check to see if this is a good point
 if Fr < Fs && Fr >= Fl    
@@ -52,7 +52,7 @@ if Fr < Fl
     
     %compute and score expansion point
     Xe = C + cfg.NM_gamma*(Xr - C);
-    Fe = score_vertex(Xe,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+    Fe = score_vertex(Xe,ConfigConstant,bh_list,batch_size,cfg);
     
     %check to see if the expansion was worth it
     if Fe < Fl
@@ -78,7 +78,7 @@ if Fr >= Fs
         
         %outside contraction point
         Xc = C + cfg.NM_beta*(Xr-C);
-        Fc = score_vertex(Xc,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+        Fc = score_vertex(Xc,ConfigConstant,bh_list,batch_size,cfg);
     
         %check validity
         if Fc <= Fr
@@ -99,7 +99,7 @@ if Fr >= Fs
         
         %inside contraction point
         Xc = C + cfg.NM_beta*(C-Xh);
-        Fc = score_vertex(Xc,ConfigConstant,default_behavior,test_behavior,batch_size,cfg);
+        Fc = score_vertex(Xc,ConfigConstant,bh_list,batch_size,cfg);
     
         %check validity
         if Fc < Fh

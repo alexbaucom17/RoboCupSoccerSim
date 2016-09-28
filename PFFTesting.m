@@ -24,6 +24,9 @@ cfg.debug = true;
 cfg.ball_start = [1,2];
 cfg.pff_testing = true;
 
+bh_list =  cat(1,repmat({@behavior_test_pff2},cfg.num_players_red,1),...
+             repmat({@behavior_test_pff2},cfg.num_players_blue,1));
+
 %set up world
 w = world(cfg);
 
@@ -38,13 +41,15 @@ for i = 1:cfg.num_players
         num = i;
         teammates = cfg.num_players_red-1;
         pos = cfg.start_pos(num,:);
+        bh = bh_list(1:cfg.num_players_red);
     else
         color = 'blue';
         num = i-cfg.num_players_red;
         teammates = cfg.num_players_blue-1;
         pos = cfg.start_pos(num+5,:);
+        bh = bh_list(cfg.num_players_red+1:end);
     end
-    p{i} = player(color,pos,num,teammates,cfg,pff_funcs);
+    p{i} = player(color,pos,num,teammates,cfg,pff_funcs,bh);
 end
 
 %set up ball

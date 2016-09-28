@@ -73,7 +73,7 @@ classdef player
     methods
         
         %class constructor
-        function obj = player(color,pos,num,teammates,cfg,pff_funcs)
+        function obj = player(color,pos,num,teammates,cfg,pff_funcs,bh_list)
            
             %defualt values
             obj.pos = [0,0,0];
@@ -113,10 +113,8 @@ classdef player
                 obj.realtime = cfg.realtime; 
                 obj.role = obj.player_number - 1;
                 if strcmp(color,'red')
-                    obj.behavior_handle = obj.cfg.behavior_handle_red;
                     obj.dir = 1;
                 else
-                    obj.behavior_handle = obj.cfg.behavior_handle_blue;
                     obj.dir = -1;
                 end  
                 if obj.cfg.world_random_on
@@ -125,7 +123,8 @@ classdef player
                     obj.world_function_handle = @get_world_exact;
                 end
             end    
-            if nargin >= 6 obj.pffs = pff_funcs; end 
+            if nargin >= 6; obj.pffs = pff_funcs; end 
+            if nargin >= 7; obj.behavior_handle = bh_list; end
         end
         
         
@@ -139,7 +138,7 @@ classdef player
             obj.role = world.cur_player.role;
             
             %make behavioral decisions based on observed data
-            obj = obj.behavior_handle(obj,world);
+            obj = obj.behavior_handle{obj.role+1}(obj,world);
            
             %update kinematics based on desired velocity
             obj = update_pos(obj);

@@ -1,14 +1,16 @@
-%Game Controller Script
-%runs game at high level
+function [stats,score] = GameController(c,bh_list,weights)
 
-%% Initialization
-close all
-clear
-rng('shuffle')
+%handle inputs
+if isprop(c,'Value')
+    cfg = c.Value;
+else
+    cfg = c;
+end
 
-%set up configuration variables
-addpath game pff
-Config();
+%override defualt weights if needed
+if nargin > 2
+    cfg.pff_weights = weights;
+end
 
 %set up world
 w = world(cfg);
@@ -24,13 +26,15 @@ for i = 1:cfg.num_players
         num = i;
         teammates = cfg.num_players_red-1;
         pos = cfg.start_pos(num,:);
+        bh = bh_list(1:cfg.num_players_red);
     else
         color = 'blue';
         num = i-cfg.num_players_red;
         teammates = cfg.num_players_blue-1;
         pos = cfg.start_pos(num+5,:);
+        bh = bh_list(cfg.num_players_red+1:end);
     end
-    p{i} = player(color,pos,num,teammates,cfg,pff_funcs);
+    p{i} = player(color,pos,num,teammates,cfg,pff_funcs,bh);
 end
 
 %set up ball
@@ -48,11 +52,6 @@ t=tic;
 t_draw = 0;
 stats.gametime = 0;
 stats.num_updates = 0;
-if cfg.record_movie
-    writerObj = VideoWriter('out.avi'); % Name it.
-    writerObj.FrameRate = 60; % How many frames per second.
-    open(writerObj);
-end
 
 while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && stats.gametime<=cfg.halflength)
      
@@ -60,18 +59,18 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
     [p,b,w] = CheckWorld(p,b,w,cfg);
     
     %update current state of world
-    w = update(w,p,b);
+    w = w.update(p,b);
     
     %run player updates
     for i = 1:cfg.num_players 
-        p{i} = update(p{i},w);
+        p{i} = p{i}.update(w);
     end
     
     %update ball
-    b = update(b);
+    b = b.update();
     
     %update collisions
-    [p,b] = HandleCollisions(p,b,cfg);   
+    [p,b] = HandleCollisions(p,b,cfg);  
     
     %update team scoring system
     score = ScoreGame(w,cfg);
@@ -90,21 +89,9 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
         [p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg);        
     end
     
-    %record movie frames
-    if cfg.record_movie
-        frame = getframe(gcf);
-        writeVideo(writerObj, frame);
-    end
-    
 end
 
-disp(stats)
-disp(score)
-if cfg.record_movie
-   close(writerObj); % Saves the movie.
 end
-    
-
 
 
 

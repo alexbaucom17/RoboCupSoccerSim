@@ -18,7 +18,7 @@ max_iter = 100;
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
 %previous trials
-default_behavior_str = 'behavior_simple';
+default_behavior_str = 'behavior_test_pff';
 default_behavior = str2func(default_behavior_str);
 
 %test behavior is which behavior to run learning on
@@ -29,6 +29,10 @@ test_behavior = str2func(test_behavior_str);
 Config();
 cfg.drawgame = false;
 cfg.halflength = 300; %run 2 5 minute halves to remove any side advantage
+
+%set up behavior list
+bh_list = repmat({default_behavior},cfg.num_players,1);
+bh_list(cfg.training_role) = {test_behavior};
 
 %loop counter
 n = 0;
@@ -52,10 +56,16 @@ disp('Generating initial simplex.')
 S = generate_simplex(cfg);
 
 %get scores for all vertices
+tic
 for i = 1:(cfg.NM_dim+1)
     fprintf('Scoring vertex %i out of %i\n',i,cfg.NM_dim+1)
-    S(i).score = score_vertex(S(i).vertex,C,default_behavior,test_behavior,batch_size,cfg);
+    S(i).score = score_vertex(S(i).vertex,C,bh_list,batch_size,cfg);
 end
+t = toc;
+fprintf('It took %4.1f seconds to run %i vertices\n',t,cfg.NM_dim+1)
+fprintf('Therefore the worst case run time for the main loop is %4.1f minutes\n',...
+            (t/(cfg.NM_dim+1))*max_iter*2/60)
+
 
 %% Run learning loop
 
@@ -65,7 +75,7 @@ while n <= max_iter && term_x == false && term_f == false
     fprintf('%i: ',n)
     
     %perform simplex transformation based off of vertex scores
-    S = simplex_transformation(S,cfg,C,default_behavior,test_behavior,batch_size);    
+    S = simplex_transformation(S,cfg,C,bh_list,batch_size);    
     
     %Test for termination
     [term_x, term_f] = termination_test(S,cfg);

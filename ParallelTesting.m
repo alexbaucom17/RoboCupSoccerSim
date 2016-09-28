@@ -7,11 +7,10 @@ addpath game pff
 disp('Initializing...')
 
 %set up configuration variables
-batch_size = 10; %ideally this should be a multiple of however many workers are in the parallel pool
+batch_size = 4; %ideally this should be a multiple of however many workers are in the parallel pool
 
 %list team behaviors to test
 bh_list = {'behavior_simple', ...
-           'behavior_test_pff', ...
            'behavior_test_pff2'};
 
 %override some config values for parallel testing
@@ -62,11 +61,13 @@ for i = 1:num_batches
     team2 = batch_combos(i,2);
     handle1 = bh(team1).handle;
     handle2 = bh(team2).handle;
+    bh_list =  cat(1,repmat({handle1},cfg.num_players_red,1),...
+             repmat({handle2},cfg.num_players_blue,1));
     
     %run batch
     parfor j = 1:batch_size
-        stats1 = ParGameController(C,handle1,handle2);
-        stats2 = ParGameController(C,handle2,handle1);
+        stats1 = GameController(C,bh_list);
+        stats2 = GameController(C,flip(bh_list));
         scores(j,:) = [stats1.score(1) + stats2.score(2), stats2.score(2) + stats2.score(1)];
     end
     
