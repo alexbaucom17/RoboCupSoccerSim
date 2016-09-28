@@ -32,7 +32,6 @@ fn = @(x,y) pff(calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir));
 %run function for all x and y
 Z = arrayfun(fn,X,Y);
 colormap('default')
-%imagesc(Z)
 contourf(ax,X,Y,Z,150)
 hold on
 

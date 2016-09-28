@@ -4,7 +4,7 @@
 close all
 clear
 rng('shuffle')
-addpath game pff NM StructSort
+addpath game pff NM NM/StructSort
 disp('Initializing...')
 
 %batch size is the number of games that will be played to get a score for

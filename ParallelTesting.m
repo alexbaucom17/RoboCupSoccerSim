@@ -7,11 +7,11 @@ addpath game pff
 disp('Initializing...')
 
 %set up configuration variables
-batch_size = 4; %ideally this should be a multiple of however many workers are in the parallel pool
+batch_size = 40; %ideally this should be a multiple of however many workers are in the parallel pool
 
 %list team behaviors to test
 bh_list = {'behavior_simple', ...
-           'behavior_test_pff2'};
+           'behavior_test_pff'};
 
 %override some config values for parallel testing
 Config();
