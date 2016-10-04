@@ -50,7 +50,7 @@ real_start = p{num}.pos(1:2);
 pathX = X(1,path(:,1));
 pathY = Y(path(:,2),1);
 
-scatter(ax,pathX,pathY,20,[1,0,0],'filled')
+%scatter(ax,pathX,pathY,20,[1,0,0],'filled')
 hold off
 
 

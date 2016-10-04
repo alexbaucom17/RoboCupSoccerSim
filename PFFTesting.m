@@ -10,18 +10,18 @@ addpath game pff
 Config();
 
 %override some configurations for potential field testing
-cfg.start_pos(2,:) = [-1,0,0];      %red attacker
-cfg.start_pos(3,:) = [-2,-1,0];     %red defender
-cfg.start_pos(4,:) = [-2,1,0];      %red supporter
-cfg.start_pos(5,:) = [-3,-0.5,0];   %red defender2
-cfg.start_pos(1,:) = [-3,0.5,0];    %red goalie
-cfg.start_pos(7,:) = [1,0,pi];      %blue attacker
-cfg.start_pos(8,:) = [2,1,pi];      %blue defender
-cfg.start_pos(9,:) = [2,-1,pi];     %blue supporter
-cfg.start_pos(10,:) = [3,-0.5,pi];  %blue defender2
-cfg.start_pos(6,:) = [3,0.5,pi];    %blue goalie
+cfg.start_pos(2,:) = [-1,1,0];      %red attacker
+cfg.start_pos(3,:) = [-3,-1,0];     %red defender
+cfg.start_pos(4,:) = [-1.5,-0.5,0];      %red supporter
+cfg.start_pos(5,:) = [-3,1,0];   %red defender2
+cfg.start_pos(1,:) = [-4,0,0];    %red goalie
+cfg.start_pos(7,:) = [0.5,0.5,pi];      %blue attacker
+cfg.start_pos(8,:) = [3,1,pi];      %blue defender
+cfg.start_pos(9,:) = [1,0,pi];     %blue supporter
+cfg.start_pos(10,:) = [3,-1,pi];  %blue defender2
+cfg.start_pos(6,:) = [4,0,pi];    %blue goalie
 cfg.debug = true;
-cfg.ball_start = [1,2];
+cfg.ball_start = [2,2];
 cfg.pff_testing = true;
 
 bh_list =  cat(1,repmat({@behavior_test_pff2},cfg.num_players_red,1),...
@@ -81,8 +81,8 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 1; %player to visualize
-clr = 'blue';
+num = 2; %player to visualize
+clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 
 %drawing update

@@ -24,12 +24,12 @@ goal_attack = [dir*cfg.goal_posts(1),0];
 D.shotpath = point_to_line(Pxy,Bxy,goal_attack); 
 
 %distance to defending shot path
-goal_def = -goal_attack;
-D.shotpath_def = point_to_line(Pxy,Bxy,goal_def); 
+%goal_def = -goal_attack;
+%D.shotpath_def = point_to_line(Pxy,Bxy,goal_def); 
 
 %offset distances for player and ball
-D.Ry = Pxy(2); %I think this probably needs to be the attackers position... which is harder
-D.By = Bxy(2);
+%D.Ry = Pxy(2); %I think this probably needs to be the attackers position... which is harder
+%D.By = Bxy(2);
 
 
 end

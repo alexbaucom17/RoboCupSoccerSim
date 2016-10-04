@@ -1,9 +1,9 @@
-function [ term_x, term_f ] = termination_test( S,cfg )
+function [term] = termination_test( S,cfg )
 %TERMINATION_TEST Test for termination conditions for Nelder Mead algorithm
-%   Checks to see if the domain has converged sufficiently and returns true
-%   for term_x if so
+%   Checks to see if the domain has converged sufficiently 
 %   Also checks to see if the function values have converged sufficiently
-%   and returns true for term_f if so
+%   Returns true if both conditions are met (according to MATLAB
+%   implimentation of fminsearch)
 
 %set defualt conditions
 term_x = false;
@@ -20,16 +20,21 @@ if abs(score_range) < cfg.NM_fn_thresh
 end
 
 %compute domain range and check to see if it is small enough
-%we will start with simple norm for now and see how that does
+%use infinity norm of difference between all points and best point
+%as speicifed by MATLAB implimentation of fminsearch
 norms = zeros(cfg.NM_dim+1,1);
-for i = 1:(cfg.NM_dim+1)
-    norms(i) = norm(S(i).vertex);
+for i = 2:(cfg.NM_dim+1)
+    norms(i) = max(abs(S(i).vertex - S(1).vertex));
 end
-norm_range = range(norms);
-if abs(norm_range) < cfg.NM_domain_thresh
+if max(norms) < cfg.NM_domain_thresh
     term_x = true;
-    fprintf('Search domain has converged with a norm range of %4.3f\n',norm_range)
+    fprintf('Search domain has converged with a norm range of %4.3f\n',max(norms))
 end
 
+term = term_x && term_f;
+
+if ~term
+    fprintf('    Function range: %4.1f. Domain range: %4.3f. Best score: %4.1f\n',score_range,max(norms),S(1).score)
+    
 end
 

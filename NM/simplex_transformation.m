@@ -88,11 +88,15 @@ if Fr >= Fs
             S_sorted(h).score = Fc;
             return
         else
-            %otherwise throw an error to indicate we need a shrink
-            %operation to continue
-            warning('Shrink operation required, keeping contraction instead')  
-            S_sorted(h).vertex = Xc;
-            S_sorted(h).score = Fc;
+            fprintf('Shrink required ...')            
+            for j = 2:h
+                Xj = S_sorted(j).vertex;
+                Xj = Xl + cfg.NM_delta*(Xj-Xl);
+                Fj = score_vertex(Xj,ConfigConstant,bh_list,batch_size,cfg);
+                S_sorted(j).vertex = Xj;
+                S_sorted(j).score = Fj;
+            end            
+            fprintf('done\n')
             return
         end
     else %this means that Fr >= Fh
@@ -109,11 +113,15 @@ if Fr >= Fs
             S_sorted(h).score = Fc;
             return
         else
-            %otherwise throw an error to indicate we need a shrink
-            %operation to continue
-            warning('Shrink operation required, keeping contraction instead')   
-            S_sorted(h).vertex = Xc;
-            S_sorted(h).score = Fc;
+            fprintf('Shrink required ...')            
+            for j = 2:h
+                Xj = S_sorted(j).vertex;
+                Xj = Xl + cfg.NM_delta*(Xj-Xl);
+                Fj = score_vertex(Xj,ConfigConstant,bh_list,batch_size,cfg);
+                S_sorted(j).vertex = Xj;
+                S_sorted(j).score = Fj;
+            end            
+            fprintf('done\n')
             return
         end
     end      

@@ -8,7 +8,7 @@ addpath game pff NM NM/StructSort
 disp('Initializing...')
 
 %File to load from if restarting test, otherwise leave blank
-load_from_file = ''; %'data/NM_Runs/NM_2016-09-30-17-34-46.mat';
+load_from_file = 'data/NM_Runs/NM_';
 
 %save after this many iteration
 save_after = 25; %iterations
@@ -19,7 +19,7 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 500;
+max_iter = 50;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
@@ -72,8 +72,6 @@ if isempty(load_from_file)
                 (t/(cfg.NM_dim+1))*max_iter*cfg.NM_dim/60)
             
 else
-    
-    disp('Loading data from file')
     
     %load data from file to continue where we left off
     load(load_from_file)
