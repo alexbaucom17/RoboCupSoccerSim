@@ -8,6 +8,8 @@ classdef world
         world_exact %struct with 'exact' information about the world
         world_random %struct with randomized variations of exact world info
         num_oob %keeps track of how many out of bounds by each team
+        own_goals %tracks number of own goals by each team
+        num_kicks %tracks number of kicks for each team
     end
     
     properties (Access = protected)     
@@ -38,6 +40,8 @@ classdef world
             obj.line_handles = [];
             obj.roles = [1:obj.cfg.num_players_red,1:obj.cfg.num_players_blue]'-1;
             obj.num_oob = [0,0];
+            obj.own_goals = [0,0];
+            obj.num_kicks = [0,0];
         end
         
         %update function for the world
@@ -277,12 +281,12 @@ classdef world
             d_ball = sqrt(sum((world_info.posArray - repmat(world_info.teamball.pos,obj.cfg.num_players,1)).^2,2));
 
             %can make eta more advanced later if needed
-            eta = d_ball/obj.cfg.player_MaxLinVel;
+            eta = d_ball/obj.cfg.player_MaxLinVelX(1);
             def = d_goal;
 
             %add any penalties
             non_attacker_idx = obj.roles ~= player.ATTACKER; 
-            eta(non_attacker_idx) = eta(non_attacker_idx) + obj.cfg.nonAttackerPenalty/obj.cfg.player_MaxLinVel;
+            eta(non_attacker_idx) = eta(non_attacker_idx) + obj.cfg.nonAttackerPenalty/obj.cfg.player_MaxLinVelX(1);
             non_defender_idx = (obj.roles ~= player.DEFENDER) | (obj.roles ~= player.DEFENDER2);
             def(non_defender_idx) = def(non_defender_idx) + obj.cfg.nonDefenderPenalty;
 

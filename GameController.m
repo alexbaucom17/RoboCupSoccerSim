@@ -70,7 +70,7 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
     b = b.update();
     
     %update collisions
-    [p,b] = HandleCollisions(p,b,cfg);  
+    [p,b,w] = HandleCollisions(p,b,cfg,w);  
     
     %update team scoring system
     score = ScoreGame(w,cfg);

@@ -258,25 +258,39 @@ classdef player
             end
             
             %perform acceleration if not at desired velocity
-            if ~all(obj.vel == obj.vel_des)
-                if norm(obj.vel_des(1:2)) > 0
-                    linear_direction  = obj.vel_des(1:2)/norm(obj.vel_des(1:2));
-                elseif norm(obj.vel(1:2)) > 0
-                    linear_direction = -obj.vel(1:2)/norm(obj.vel(1:2));
+            dv = obj.vel_des - obj.vel;
+            if any(dv ~= 0)
+                
+                %compute linear velocity direction
+                dv_lin = dv(1:2);
+                if norm(dv_lin) > 0
+                    linear_direction  = dv_lin/norm(dv_lin);
                 else
                     linear_direction = [0,0];
                 end
-                obj.vel = obj.vel + [linear_direction*obj.cfg.player_accelLin, sign(obj.vel_des(3))*obj.cfg.player_accelAng]*dt;
-                if norm(obj.vel(1:2)) > obj.cfg.player_MaxLinVel
-                    obj.vel(1:2) = linear_direction*obj.cfg.player_MaxLinVel;
+                
+                %do linear and angular acceleration
+                obj.vel(1:2) = obj.vel(1:2) + linear_direction.*obj.cfg.player_accelLin * dt;
+                obj.vel(3) = obj.vel(3) + sign(obj.vel_des(3))*obj.cfg.player_accelAng*dt;
+                
+                %cap velocites at desired to prevent wobble (and avoid expensive
+                %controller)
+                inc = dv>0;
+                dec = dv<0;
+                obj.vel(inc) = sign(obj.vel_des(inc)).*min(abs(obj.vel(inc)),abs(obj.vel_des(inc)));
+                obj.vel(dec) = sign(obj.vel_des(dec)).*max(abs(obj.vel(dec)),abs(obj.vel_des(dec)));                
+                
+                %cap velocities at max in each direction
+                if obj.vel(1) < 0
+                    obj.vel(1) = max(obj.vel(1),obj.cfg.player_MaxLinVelX(2));
+                else
+                    obj.vel(1) = min(obj.vel(1),obj.cfg.player_MaxLinVelX(1));
                 end
-                if abs(obj.vel(3)) > obj.cfg.player_MaxAngVel
-                    obj.vel(3) = sign(obj.vel_des(3))*obj.cfg.player_MaxAngVel;
-                end
-                vel_correct = abs(obj.vel) >= abs(obj.vel_des);
-                if any(vel_correct)
-                    obj.vel(vel_correct) = obj.vel_des(vel_correct);
-                end
+                obj.vel(2) = sign(obj.vel(2)) * min(abs(obj.vel(2)),obj.cfg.player_MaxLinVelY);
+                obj.vel(3) = sign(obj.vel(3)) * min(abs(obj.vel(3)),obj.cfg.player_MaxAngVel);
+                
+               
+                
             end        
             
             %position change in local coorinate system

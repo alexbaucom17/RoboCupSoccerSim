@@ -1,11 +1,15 @@
-function [ w ] = estimate_final_parameters( S)
+function [ w ] = estimate_final_parameters(S,cfg)
 %ESTIMATE_FINAL_PARAMETERS Estimate final weights of simplex
 
 
 %for now I am just returning the best vertex, but we could also do more
 %complex processing like a weighted average below
 S = sortStruct(S,'score');
-w = S(1).vertex;
+w_best = S(1).vertex;
+
+%grab defualt weights and overwrite with the current training weights
+w = cfg.pff_weights;
+w(cfg.NM_idx) = w_best;
 
 
 

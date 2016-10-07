@@ -189,10 +189,10 @@ end
 %do max linear velocity if far away. When close use
 %proportional controller
 if norm(dp_local) > obj.cfg.closetoPos
-    obj.vel_des(1:2) = dp_local/norm(dp_local) * obj.cfg.player_MaxLinVel;
+    obj.vel_des(1:2) = dp_local/norm(dp_local) * obj.cfg.player_MaxLinVelX(1);
     obj.nearPos = false;
 else
-    obj.vel_des(1:2) = 5 * dp_local * obj.cfg.player_MaxLinVel;
+    obj.vel_des(1:2) = 5 * dp_local * obj.cfg.player_MaxLinVelX(1);
     obj.nearPos = true;
 end
 

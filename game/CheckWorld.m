@@ -56,9 +56,15 @@ elseif oobX && goal
     %blue goal
     if bpos(1) < 0
         w.blue_score = w.blue_score + 1;
+        if strcmp(b.prev_touch,'red')
+            w.own_goals(1) = w.own_goals(1) + 1;
+        end
     %red goal    
     else
         w.red_score = w.red_score + 1;
+        if strcmp(b.prev_touch,'blue')
+            w.own_goals(2) = w.own_goals(2) + 1;
+        end
     end
     
     %reset ball

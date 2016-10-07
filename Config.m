@@ -41,9 +41,10 @@ cfg.MinBallVel = 0.01; %m/s
 
 %player parameters
 cfg.player_hitbox_radius = 0.13; %m
-cfg.player_accelLin = 0.04; %m/s^2
-cfg.player_accelAng = 0.05; %rad/s^2
-cfg.player_MaxLinVel = 0.1; %m/s
+cfg.player_accelLin = [0.04,0.02]; %m/s^2
+cfg.player_accelAng = 0.04; %rad/s^2
+cfg.player_MaxLinVelX = [0.1,-0.04]; %m/s
+cfg.player_MaxLinVelY = 0.04;
 cfg.player_MaxAngVel = 0.2; %rad/s
 
 %kick parameters
@@ -96,21 +97,20 @@ cfg.world_seeBallFOV = 120*pi/180;
 
 %Potential Field Function
                                 %goalie attacker defender supporter defender2   
-pff_weights.boundary_reach =    [   0.5    0.5      0.5       0.5      0.5];
-pff_weights.boundary_scale =    [   2      2        3         2        3];
-pff_weights.ball_eq_pos    =    [   0      0.1      2         0        1];
+pff_weights.boundary_reach =    [   0.2    0.2      0.2       0.2      0.2];
+pff_weights.boundary_scale =    [   10     10       10        10       10];
+pff_weights.ball_eq_pos    =    [   1      0.1      2         0        1];
 pff_weights.ball_scale     =    [   0      4        1         1        1];
 pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
-pff_weights.team_scale     =    [   0      3        3         3        3];
+pff_weights.team_scale     =    [   1      3        3         3        3];
 pff_weights.def_bias_scale =    [   1      0        1         0        1];
 pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
-pff_weights.att_shot_scale =    [   0      2.5      0         0        0];
-pff_weights.att_bias_scale =    [   0      1        0         0        0];
+pff_weights.att_shot_scale =    [   4      2.5      0         0        0];
+pff_weights.att_bias_scale =    [   1      1        0         0        0];
 pff_weights.att_bias_reach =    [   0      2        0         0        0];
-% pff_weights.sup_shot_dist  =    [   0      0        0         2        0];
+pff_weights.sup_shot_dist  =    [   1      0        0         2        0];
 % pff_weights.sup_shot_scale =    [   0      0        0         1        0];
 % pff_weights.def_shot_scale =    [   1      0        1         0        0.5];
-% pff_weights.offset_scale   =    [   0      0        0         1        0];
 
 cfg.pff_weights = cell2mat(struct2cell(pff_weights));
 clear pff_weights
@@ -124,21 +124,35 @@ cfg.use_static_functions = 1;
 cfg.goalsForPts = 1000;
 cfg.goalsAgainstPts = -1000;
 cfg.oobPts = -100;
-cfg.close2ballthresh = 0.3; %m
+cfg.close2ballthresh = 0.5; %m
 cfg.close2ballPts = 0.01;
+cfg.ownGoalForPts = -500;
+cfg.ownGoalAgainstPts = -1000;
+cfg.kickPts = 15;
 
 %Nelder mead learning parameters
-cfg.training_role = 2;  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
-cfg.NM_initial = reshape(cfg.pff_weights(:,cfg.training_role),1,[]);
-cfg.NM_dim = length(cfg.NM_initial);
+cfg.training_role = [1,2];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
+cfg.NM_fn_thresh = 100;
+cfg.NM_domain_thresh = 0.1;
+cfg.NM_weight_penalty = 10;
 cfg.NM_initial_step_size = 1;
+%remove all 0 weights from training set but keep index for easy replacement
+%later
+cfg.NM_initial = reshape(cfg.pff_weights(:,cfg.training_role),1,[]);
+cfg.NM_idx = [];
+for i = cfg.training_role
+    col = cfg.pff_weights(:,i);
+    rows = find(col ~= 0);
+    cols = repmat(i,length(rows),1);
+    cfg.NM_idx = [cfg.NM_idx; sub2ind(size(cfg.pff_weights),rows,cols)];
+end    
+cfg.NM_initial(cfg.NM_initial == 0) = []; 
+cfg.NM_dim = length(cfg.NM_initial);
 %adaptive parameters for NM
 cfg.NM_alpha = 1;
 cfg.NM_beta = 1 + 2/cfg.NM_dim;
 cfg.NM_gamma = 0.75-1/(2*cfg.NM_dim);
 cfg.NM_delta = 1-1/cfg.NM_dim;
-cfg.NM_fn_thresh = 100;
-cfg.NM_domain_thresh = 0.1;
-cfg.NM_weight_penalty = 10;
+
 
 

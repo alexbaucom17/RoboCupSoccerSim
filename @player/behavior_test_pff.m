@@ -218,7 +218,7 @@ vel_des = [0,0,0]; %assume this for now
 team_idx = (1:(obj.num_teammates+1)) ~= world.cur_player.number;
 team_pos = reshape([world.myTeam(team_idx).pos],3,[])';
 team_vel = reshape([world.myTeam(team_idx').vel],3,[])';
-amax = obj.cfg.player_accelLin;
+amax = norm(obj.cfg.player_accelLin);
 pROB = obj.cfg.player_hitbox_radius;
 
 %generate attractive force

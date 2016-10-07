@@ -1,4 +1,4 @@
-function [p,b] = HandleCollisions(p,b,cfg)
+function [p,b,w] = HandleCollisions(p,b,cfg,w)
 %HANDLECOLLISIONS Checks for collisions between players and ball as well as
 %kicks
 %   Checks if there are colisions and calculates new velocities based on
@@ -33,8 +33,15 @@ if ~isempty(kick_idx)
         [b,status] = executeKick(pKick,b,kick_rad,cfg);
         if status == false
             kick(idx) = 0;
+        else
+            %keep track of number of kicks for each team
+            if strcmp(b.prev_touch,'red')
+                w.num_kicks(1) = w.num_kicks(1) + 1;
+            else
+                w.num_kicks(2) = w.num_kicks(2) + 1;
+            end
         end
-        p{idx}.kick = 0;
+        p{idx}.kick = 0;        
     end
 end
     

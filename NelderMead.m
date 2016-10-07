@@ -19,12 +19,12 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 500;
+max_iter = 10;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
 %previous trials
-default_behavior_str = 'behavior_test_pff';
+default_behavior_str = 'behavior_simple';
 default_behavior = str2func(default_behavior_str);
 
 %test behavior is which behavior to run learning on
@@ -114,5 +114,8 @@ else
     disp('Search has reached max iterations')
 end
 
+t = toc;
+fprintf('It took %4.1f seconds to run %i iterations\n',t,n)
+
 %estimate final parameters based on simplex
-w = estimate_final_parameters(S);
+new_pff_weights = estimate_final_parameters(S,cfg);
