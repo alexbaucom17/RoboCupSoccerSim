@@ -24,11 +24,11 @@ max_iter = 100;
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
 %previous trials
-default_behavior_str = 'behavior_simple';
+default_behavior_str = 'moveSimple';
 default_behavior = str2func(default_behavior_str);
 
 %test behavior is which behavior to run learning on
-test_behavior_str = 'behavior_test_pff2';
+test_behavior_str = 'movePff';
 test_behavior = str2func(test_behavior_str);
 
 %override some config values for learning
