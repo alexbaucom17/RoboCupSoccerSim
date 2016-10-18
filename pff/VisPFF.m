@@ -6,7 +6,7 @@ xmin = -cfg.field_length_max;
 xmax = cfg.field_length_max;
 ymin  = -cfg.field_width_max;
 ymax = cfg.field_width_max;
-step_size = 0.05;
+step_size = 0.1;
 
 %set up grid
 [X,Y] = meshgrid(xmin:step_size:xmax,ymin:step_size:ymax);
@@ -26,11 +26,20 @@ end
 team_pos = team_pos(:,1:2);
 
 %set up function 
-pff = p{num}.pffs{p{num}.role+1};
-fn = @(x,y) pff(calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir));
+% pff = p{num}.pffs{p{num}.role+1};
+% fn = @(x,y) pff(calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir));
+% Z = arrayfun(fn,X,Y);
 
-%run function for all x and y
-Z = arrayfun(fn,X,Y);
+%symbolic pffs
+pff = p{num}.pffs{p{num}.role+1};
+x = reshape(X,[],1);
+y = reshape(Y,[],1);
+[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+                = calculate_distances2(cfg,[x,y],0,ball_global,team_pos,dir);
+z = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
+Z = reshape(z,size(X));
+
+
 colormap('default')
 contourf(ax,X,Y,Z,150)
 hold on
@@ -50,7 +59,7 @@ real_start = p{num}.pos(1:2);
 pathX = X(1,path(:,1));
 pathY = Y(path(:,2),1);
 
-%scatter(ax,pathX,pathY,20,[1,0,0],'filled')
+scatter(ax,pathX,pathY,20,[1,0,0],'filled')
 hold off
 
 

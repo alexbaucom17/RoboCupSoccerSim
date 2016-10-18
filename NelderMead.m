@@ -8,7 +8,7 @@ addpath game pff NM NM/StructSort
 disp('Initializing...')
 
 %File to load from if restarting test, otherwise leave blank
-load_from_file = ''; %'data/NM_Runs/NM_2016-09-30-17-34-46.mat';
+load_from_file = ''; %'data/NM_Runs/NM_2016-10-10-14-40-08.mat';
 
 %save after this many iteration
 save_after = 25; %iterations
@@ -19,7 +19,7 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 10;
+max_iter = 100;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
@@ -32,10 +32,9 @@ test_behavior_str = 'behavior_test_pff2';
 test_behavior = str2func(test_behavior_str);
 
 %override some config values for learning
-Config();
+cfg = Config();
 cfg.drawgame = false;
 cfg.halflength = 300; %run 2 5 minute halves to remove any side advantage
-cfg.use_static_functions = 1;
 
 %set up behavior list
 bh_list = repmat({default_behavior},cfg.num_players,1);
@@ -57,7 +56,7 @@ end
 
 %create a new simplex from scratch
 if isempty(load_from_file)
-    disp('Generating initial simplex.')
+    disp('Generating initial simplex...')
     S = generate_simplex(cfg);
 
     %get scores for all vertices
@@ -115,7 +114,7 @@ else
 end
 
 t = toc;
-fprintf('It took %4.1f seconds to run %i iterations\n',t,n)
+fprintf('It took %4.1f seconds to run %i iterations\n',t,n-1)
 
 %estimate final parameters based on simplex
 new_pff_weights = estimate_final_parameters(S,cfg);

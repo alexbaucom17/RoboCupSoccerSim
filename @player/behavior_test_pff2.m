@@ -47,8 +47,12 @@ obj.nearPos = norm(world.cur_player.pos(1:2) - ball_global) < 2*obj.cfg.closetoP
 
 %check to see if we need to transition
 if obj.nearPos && obj.role == player.ATTACKER
-    obj.behaviorState = player.KICK;
-    obj.bh_init = true; 
+%     ball2goal = world.goal_attack - ball_global;
+%     des_angle = atan2(ball2goal(2),ball2goal(1));
+%     if abs(world.cur_player.pos(3) - des_angle) < obj.cfg.closetoAng
+        obj.behaviorState = player.KICK;
+        obj.bh_init = true; 
+%     end
 end
 
 %check to see if we need to transition
@@ -113,20 +117,24 @@ sample_dY = obj.cfg.local_sample_distance*sin(samples);
 sampleX = pos_cur(1) + sample_dX; 
 sampleY = pos_cur(2) + sample_dY;
 
-%find potential field near player
+%use symoblic pffs
 pff = obj.pffs{obj.role+1};
-fn = @(x,y) pff(calculate_distances(obj.cfg,[x,y],pos_cur(3),ball_global,team_pos,obj.dir));
-P = zeros(length(sampleX),1);
-for i = 1:length(sampleX)
-    P(i) = fn(sampleX(i),sampleY(i));
-end
+[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+                = calculate_distances2(obj.cfg,[sampleX',sampleY'],pos_cur(3),ball_global,team_pos,obj.dir);
+P = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
+[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+                = calculate_distances2(obj.cfg,[pos_cur(1),pos_cur(2)],pos_cur(3),ball_global,team_pos,obj.dir);
+cur_val = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
+
 
 %find direction of new velocity along best gradient
 [min_val,idx] = min(P);
-cur_val = fn(pos_cur(1),pos_cur(2));
-dir = obj.dir*[sample_dX(idx),sample_dY(idx)];
+dir = [sample_dX(idx);sample_dY(idx)];
+ang = pos_cur(3);
+tf = [cos(ang) sin(ang); -sin(ang) cos(ang)]; %need tf because dx and dy are global positions
+dir = tf*(dir/norm(dir));
 mag = obj.cfg.pff_vel_scale*max([0,cur_val-min_val]);
-obj.vel_des(1:2) = mag*dir;
+obj.vel_des(1:2) = mag*dir';
 
 %set angle to just track ball
 dpBall = ball_global - pos_cur(1:2);

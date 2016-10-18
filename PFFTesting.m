@@ -7,11 +7,11 @@ rng('shuffle')
 
 %set up configuration variables
 addpath game pff
-Config();
+cfg = Config();
 
 %override some configurations for potential field testing
-cfg.start_pos(2,:) = [-1,1,0];      %red attacker
-cfg.start_pos(3,:) = [-3,-1,0];     %red defender
+cfg.start_pos(2,:) = [4,2.5,0];      %red attacker
+cfg.start_pos(3,:) = [1.5,0,0];     %red defender
 cfg.start_pos(4,:) = [-1.5,-0.5,0];      %red supporter
 cfg.start_pos(5,:) = [-3,1,0];   %red defender2
 cfg.start_pos(1,:) = [-4,0,0];    %red goalie
@@ -21,7 +21,7 @@ cfg.start_pos(9,:) = [1,0,pi];     %blue supporter
 cfg.start_pos(10,:) = [3,-1,pi];  %blue defender2
 cfg.start_pos(6,:) = [4,0,pi];    %blue goalie
 cfg.debug = true;
-cfg.ball_start = [2,2];
+cfg.ball_start = [0,0];
 cfg.pff_testing = true;
 
 bh_list =  cat(1,repmat({@behavior_test_pff2},cfg.num_players_red,1),...
@@ -31,7 +31,7 @@ bh_list =  cat(1,repmat({@behavior_test_pff2},cfg.num_players_red,1),...
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
+pff_funcs = pff_funcs_sym(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -71,7 +71,7 @@ w = update(w,p,b);
 
 %run player updates
 for i = 1:cfg.num_players 
-    p{i} = update(p{i},w);
+    p{i} = p{i}.update(w);
 end
 
 %update ball

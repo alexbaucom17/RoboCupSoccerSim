@@ -27,6 +27,9 @@ D.shotpath = point_to_line(Pxy,Bxy,goal_attack);
 goal_def = -goal_attack;
 D.shotpath_def = point_to_line(Pxy,Bxy,goal_def); 
 
+%distance to goals
+D.goalAtt = abs(goal_attack(1) - Pxy(1));
+D.goalDef = abs(Pxy(1) - goal_def(1));
 
 
 end

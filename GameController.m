@@ -16,7 +16,8 @@ end
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
+% pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
+pff_funcs = pff_funcs_sym(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -46,6 +47,12 @@ if cfg.drawgame
 else
     fig = -1;
 end
+
+if cfg.record_movie
+    V = VideoWriter('SoccerSimulation.mp4','MPEG-4');
+    open(V);
+end
+
 
 %% Main Execution Loop
 t=tic;
@@ -89,7 +96,17 @@ while (ishandle(fig) && stats.gametime<=cfg.halflength) || (~cfg.drawgame && sta
         [p,b,w] = AnimateGame(p,b,w,fig,ax,stats_handles,stats,cfg);        
     end
     
+    if cfg.record_movie
+        frame = getframe;
+        writeVideo(V,frame);
+    end
+    
 end
+
+if cfg.record_movie
+    close(V);
+end
+
 
 end
 

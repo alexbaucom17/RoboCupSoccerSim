@@ -11,7 +11,7 @@ end
 
 b = b.draw_ball(ax);
 
-w = w.draw_lines(ax);
+%w = w.draw_lines(ax);
 
 %draw statistics text
 if ~cfg.pff_testing

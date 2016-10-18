@@ -10,7 +10,7 @@ classdef player
     %% public properties
     
     properties
-        pos %player position [x,y,a] (player will always thing this is in the + direction)
+        pos %player position [x,y,a] (player will always think this is in the + direction)
         vel_des %player desired velocity [x,y,a]
         kick %1 if player is attempting a kick, 0 otherwise
         gametime %total game time that has passed

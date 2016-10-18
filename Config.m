@@ -1,3 +1,6 @@
+function cfg = Config()
+%initialize configuration variables
+
 %initialize configuraiton variable
 cfg = [];
 
@@ -73,7 +76,7 @@ cfg.oobLineX = cfg.field_length - 0.5;
 
 %behavior
 cfg.closetoPos = 0.1; %m
-cfg.closetoAng = 10*pi/180;
+cfg.closetoAng = 20*pi/180;
 cfg.ballLostTime = 1; %sec
 cfg.GoalieGoThresh = 1; %m
 cfg.GoalieHomeDist = 0.3;
@@ -96,45 +99,53 @@ cfg.world_seeBallContRate = 0.99;
 cfg.world_seeBallFOV = 120*pi/180;
 
 %Potential Field Function
-                                %goalie attacker defender supporter defender2   
-pff_weights.boundary_reach =    [   0.2    0.2      0.2       0.2      0.2];
-pff_weights.boundary_scale =    [   10     10       10        10       10];
-pff_weights.ball_eq_pos    =    [   1      0.1      2         0        1];
-pff_weights.ball_scale     =    [   0      4        1         1        1];
-pff_weights.team_reach     =    [   0      0.5      0.5       0.5      0.5];
-pff_weights.team_scale     =    [   1      3        3         3        3];
-pff_weights.def_bias_scale =    [   1      0        1         0        1];
-pff_weights.fwd_bias_scale =    [   0      0        0         1        0];
-pff_weights.att_shot_scale =    [   4      2.5      0         0        0];
-pff_weights.att_bias_scale =    [   1      1        0         0        0];
-pff_weights.att_bias_reach =    [   0      2        0         0        0];
-pff_weights.sup_shot_dist  =    [   1      0        0         2        0];
-% pff_weights.sup_shot_scale =    [   0      0        0         1        0];
-% pff_weights.def_shot_scale =    [   1      0        1         0        0.5];
+%attractive                       %goalie attacker defender supporter defender2  
+pff_weights.ball_range         = [   1      10       0         0.2      0.2];
+pff_weights.ball_offset        = [   0.01   0       0         10       10];
+pff_weights.ball_gain          = [   5      5        0         0        1];
+pff_weights.shotpath_range     = [   0      10       0         1        1];
+pff_weights.shotpath_offset    = [   0      0.1      0         0.5      0.5];
+pff_weights.shotpath_gain      = [   0      20       0         3        3];
+pff_weights.shotpathDef_range  = [   10     0        9         1        1];
+pff_weights.shotpathDef_offset = [   0.01   0        0.1       0.5      0.5];
+pff_weights.shotpathDef_gain   = [   4      0        3         3        3];
+pff_weights.goalAtt_range      = [   0      0        0         0        1];
+pff_weights.goalAtt_offset     = [   0      0        0         1        0];
+pff_weights.goalAtt_gain       = [   0      0        0         0        0];
+pff_weights.goalDef_range      = [   9      0        10        0        1];
+pff_weights.goalDef_offset     = [   0.5    0        1.5       1        0];
+pff_weights.goalDef_gain       = [   4      0        4         0        0];
+%repulsive
+pff_weights.sideline_range     = [   0.1    0.2      0.2       0        0];
+pff_weights.sideline_offset    = [   0      0        0         0        0];
+pff_weights.sideline_gain      = [   1      1        1         2        0];
+pff_weights.teammate_range     = [   0      0.5      1         0        0];
+pff_weights.teammate_offset    = [   0      0        0         0        0];
+pff_weights.teammate_gain      = [   0      0.5      0.5       2        0];
 
-cfg.pff_weights = cell2mat(struct2cell(pff_weights));
-clear pff_weights
+%more pff parameters
+cfg.pff_fun_desc = [1 1 1 1 1 0 0];
 cfg.pff_testing = false;
 cfg.num_local_samples = 10;
-cfg.local_sample_distance = 0.05;
+cfg.local_sample_distance = 0.1;
 cfg.pff_vel_scale = 10;
-cfg.use_static_functions = 1;
+cfg.pff_weights = cell2mat(struct2cell(pff_weights));
     
 %Game Scoring
-cfg.goalsForPts = 1000;
-cfg.goalsAgainstPts = -1000;
+cfg.goalsForPts = 10000;
+cfg.goalsAgainstPts = -10000;
 cfg.oobPts = -100;
 cfg.close2ballthresh = 0.5; %m
 cfg.close2ballPts = 0.01;
-cfg.ownGoalForPts = -500;
-cfg.ownGoalAgainstPts = -1000;
+cfg.ownGoalForPts = -5000;
+cfg.ownGoalAgainstPts = -10000;
 cfg.kickPts = 15;
 
-%Nelder mead learning parameters
-cfg.training_role = [1,2];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
-cfg.NM_fn_thresh = 100;
-cfg.NM_domain_thresh = 0.1;
-cfg.NM_weight_penalty = 10;
+%Nelder mead learning parameters and calculations
+cfg.training_role = [1,2,3];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
+cfg.NM_fn_thresh = 1000;
+cfg.NM_domain_thresh = 0.2;
+cfg.NM_weight_penalty = 1;
 cfg.NM_initial_step_size = 1;
 %remove all 0 weights from training set but keep index for easy replacement
 %later

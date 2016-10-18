@@ -18,5 +18,5 @@ end
 
 %average batch scores (negative since we need minimzation for NM)
 %add score penalty to encourage lower weights
-score = -sum(scores)/batch_size + cfg.NM_weight_penalty*norm(w_in)^2;
+score = -sum(scores)/batch_size + cfg.NM_weight_penalty*norm(w_in);
 

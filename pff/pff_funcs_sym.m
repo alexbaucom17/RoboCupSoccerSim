@@ -2,32 +2,11 @@ function [ fns ] = pff_funcs_sym( cfg )
 %PFF_FUNCS_SYM Summary of this function goes here
 %   Detailed explanation goes here
 
-%overwrite config stuff
-                                %goalie attacker defender supporter defender2   
-pff_weights.ball_range      =    [   0.2    5      0.2       0.2      0.2];
-pff_weights.ball_offset     =    [   10     0.1       10        10       10];
-pff_weights.ball_gain       =    [   1      10       2         0        1];
-pff_weights.shotpath_range  =    [   4      4        1         1        1];
-pff_weights.shotpath_offset =    [   1      0.5      0.5       0.5      0.5];
-pff_weights.shotpath_gain   =    [   1      3        3         3        3];
-pff_weights.goal_range      =    [   1      0        1         0        1];
-pff_weights.goal_offset     =    [   2      0        0         1        0];
-pff_weights.goal_gain       =    [   4      0        0         0        0];
-pff_weights.sideline_range  =    [   0      1        0         0        0];
-pff_weights.sideline_offset =    [   0      1        0         0        0];
-pff_weights.sideline_gain   =    [   0      1        0         2        0];
-pff_weights.teammate_range  =    [   0      1        0         0        0];
-pff_weights.teammate_offset =    [   0      1        0         0        0];
-pff_weights.teammate_gain   =    [   0      1        0         2        0];
-
-cfg.pff_weights = cell2mat(struct2cell(pff_weights));
-cfg.pff_fun_desc = [1 1 1 0 0];
-
-syms dball dshotpath dgoal
+%set up pff variable names
+syms dball dshotpath dshotpathDef dgoalAtt dgoalDef
 dsideline = sym('dside',[1,4]);
-dteammate = sym('dmate',[1,cfg.num_players_red]);
-dist_names = {dball dshotpath dgoal dsideline,dteammate};
-
+dteammate = sym('dmate',[1,cfg.num_players_red-1]);
+dist_names = {dball dshotpath dshotpathDef dgoalAtt dgoalDef dsideline dteammate};
 
 %set up basic attracitve and repulsive functions
 syms gain offset rang d
@@ -89,7 +68,7 @@ for i = 1:num_players
     end
     
     %create file and give function handle
-    fns{i} = matlabFunction(f_total,'File',fnames{i},'Vars',dist_names);
+    fns{i} = matlabFunction(f_total,'Vars',dist_names); %,'File',fnames{i});
 
 end
 
