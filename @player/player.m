@@ -134,7 +134,7 @@ classdef player
             obj.role = world.cur_player.role;
             
             %make behavioral decisions based on observed data
-            obj = behavior_simple(obj,world);
+            obj = behavior_simpleFSM(obj,world);
            
             %update kinematics based on desired velocity
             obj = update_pos(obj);

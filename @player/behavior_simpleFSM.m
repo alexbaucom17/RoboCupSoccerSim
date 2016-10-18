@@ -1,4 +1,4 @@
-function obj = behavior_test_pff2(obj,world) 
+function obj = behavior_simpleFSM(obj,world) 
 %BEHAVIOR runs simple fsm to simulate player behavior
 
 %simple FSM
@@ -41,7 +41,7 @@ else
 end
 
 %do calculations
-[obj.vel_des, nearPos, nearAng] = posvelPff(obj,world,ball_global);
+[ obj, nearPos, nearAng ] = obj.moveFn{obj.role+1}(obj,world,ball_global);
 
 %check to see if we need to transition
 if nearAng && nearPos && obj.role == player.ATTACKER
@@ -90,4 +90,7 @@ obj.behaviorState = player.SEARCH;
 obj.bh_init = true;
 
 end
+
+
+
 
