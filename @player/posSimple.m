@@ -1,5 +1,5 @@
 function [ pos_des ] = posSimple( obj,world,ball_global )
-%POSSIMPLE Calculate desired position
+%POSSIMPLE Calculate desired position for each role with simple hueristics
 
 %get position information
 pose_info = world.cur_player.pos;

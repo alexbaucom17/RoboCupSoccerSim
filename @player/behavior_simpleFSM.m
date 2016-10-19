@@ -55,8 +55,6 @@ if nearAng && nearPos && obj.role == player.GOALIE
     obj.bh_init = true; 
 end
 
-
-
 end
 
 function obj = behavior_search(obj,world)
@@ -85,7 +83,7 @@ end
 
 function obj = behavior_kick(obj,world)
 
-obj.kick = 1;
+obj.kick = 1; %this flag tells game controller to exectue a kick
 obj.behaviorState = player.SEARCH;
 obj.bh_init = true;
 

@@ -1,5 +1,5 @@
 function [ vel_des, nearPos,nearAng ] = velSimple( obj,world )
-%VELSIMPLE calculate desired velocity
+%VELSIMPLE calculate desired velocity with very simple controller
 
 %get position information
 pose_info = world.cur_player.pos;

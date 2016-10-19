@@ -2,17 +2,11 @@ function [ newscore ] = ScoreGame(world,cfg)
 %SCOREGAME Scoring function for soccer simulation
 %   Takes in world info and configuration and updates 
 %   the score for this step
+%   world - world object
+%   cfg - configuration
+%   newscore - the total scores after this update
 
-
-%scoring metrics
-% + goals scored
-% - goals against
-% - out of bounds
-% + attacker close to ball
-% + supporter and attacker proper distance range apart
-% - defenders + goalie to close
-% - searching time
-
+%keep persistent track if score
 persistent score;
 
 %initialize if needed
@@ -23,9 +17,7 @@ if isempty(score)
     score.close2ball = [0,0];
     score.own_goals = [0,0];
     score.num_kicks = [0,0];
-    %score.supportDist = [0,0];
-    %score.defendDist = [0,0];
-    %score.searchTime = [0,0];
+
     
 %update properties each step
 else
@@ -35,7 +27,7 @@ else
     ball_dist = [world.world_exact.players(attacker_ids).ball_local];
     attacker_dist = [norm(ball_dist(1:2)),norm(ball_dist(3:4))];
     
-    
+    %update individual scores
     score.goalsFor = [world.red_score, world.blue_score];
     score.goalsAgainst = [world.blue_score, world.red_score];
     score.own_goals_against = world.own_goals;

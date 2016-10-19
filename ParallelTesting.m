@@ -1,3 +1,5 @@
+%A script to run many simulations between various behaviors and compare how
+%they perform
 
 %% Initialization
 close all

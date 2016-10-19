@@ -2,8 +2,11 @@ function [p,b,w] = HandleCollisions(p,b,cfg,w)
 %HANDLECOLLISIONS Checks for collisions between players and ball as well as
 %kicks
 %   Checks if there are colisions and calculates new velocities based on
-%   elastic collision model. New velocites are updated in objects and
-%   output as Pnew and Bnew
+%   elastic collision model. New velocites are updated in objects 
+%   p - cell array of player objects
+%   b - ball object
+%   cfg - configuration
+%   w - world object
 
 %get config parameters
 ball_rad = cfg.ball_radius;
@@ -18,8 +21,7 @@ for i = 1:cfg.num_players
     kick(i) = p{i}.kick;
 end
 
-
-%%%%%%%%%%%%%%%%%%%%%Check kicks%%%%%%%%%%%%%%%%%%%%
+%% Check kicks
 
 %if a single player is atempting to kick, just exectute
 %if multiple people are attempting kick, do it in a random order
@@ -46,7 +48,7 @@ if ~isempty(kick_idx)
 end
     
 
-%%%%%%%%%%%%Bumping ball, but not kicking%%%%%%%%%%%
+%% Bumping ball, but not kicking
 
 %get ball position and velocity
 bpos = b.pos;
@@ -72,7 +74,8 @@ if ~isempty(bump_idx)
 end
 
 
-%%%%%%%%%%%%%%Players bumping%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Player bumping
+
 %figure out which players are bumping into each other
 %and exectue bump code in random order
 if cfg.num_players > 1

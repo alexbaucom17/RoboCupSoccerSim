@@ -1,5 +1,8 @@
 function [ vel_des, nearPos,nearAng ] = velPff( obj,world )
-%VELPFF 
+%VELPFF Calculate velocity based on potential field function
+% 
+% based on Dynamic Motion Planning for Mobile Robots Using Potential Field
+% Method by Ge and Cui       
 
 %collect information
 pos_cur = world.cur_player.pos;

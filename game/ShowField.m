@@ -1,7 +1,9 @@
 function [ fig, stats_handles, ax ] = ShowField(cfg)
 %SHOWFIELD Draws soccer field
-%   Reterusn fig which is a handle to current figure containing the field
-
+%   cfg - confgiruation
+%   fig - a handle to current figure containing the field
+%   stats_handles - handle to stats drawing objects
+%   ax - field axes
 
 %prep figure window
 ax = gca;
@@ -19,9 +21,11 @@ rectangle(ax ,'Position',[-cfg.field_length,-cfg.field_width,cfg.line_thickness,
     'FaceColor','white','EdgeColor','none')
 rectangle(ax ,'Position',[cfg.field_length,-cfg.field_width,cfg.line_thickness,2*cfg.field_width+cfg.line_thickness],...
     'FaceColor','white','EdgeColor','none')
+
 %center line
 rectangle(ax ,'Position',[-cfg.line_thickness/2,-cfg.field_width,cfg.line_thickness,2*cfg.field_width],...
     'FaceColor','white','EdgeColor','none')
+
 %penalty box lines
 rectangle(ax ,'Position',[cfg.penalty_corners(2,1),cfg.penalty_corners(2,2),cfg.line_thickness,cfg.penaltyY],...
     'FaceColor','white','EdgeColor','none')
@@ -35,6 +39,7 @@ rectangle(ax ,'Position',[cfg.penalty_corners(3,1),cfg.penalty_corners(3,2),cfg.
     'FaceColor','white','EdgeColor','none')
 rectangle(ax ,'Position',[cfg.penalty_corners(4,1),cfg.penalty_corners(4,2),cfg.penaltyX+cfg.line_thickness,cfg.line_thickness],...
     'FaceColor','white','EdgeColor','none')
+
 %spots
 rectangle(ax ,'Position',[cfg.spots(1,1)-cfg.spot_size/2,cfg.spots(1,2)-cfg.line_thickness/2,cfg.spot_size,cfg.line_thickness],...
     'FaceColor','white','EdgeColor','none')
@@ -44,9 +49,11 @@ rectangle(ax ,'Position',[cfg.spots(2,1)-cfg.spot_size/2,cfg.spots(2,2)-cfg.line
     'FaceColor','white','EdgeColor','none')
 rectangle(ax ,'Position',[cfg.spots(2,1)-cfg.line_thickness/2,cfg.spots(2,2)-cfg.spot_size/2,cfg.line_thickness,cfg.spot_size],...
     'FaceColor','white','EdgeColor','none')
+
 %circle
 rectangle(ax ,'Position',[-cfg.circle_radius,-cfg.circle_radius,2*cfg.circle_radius,2*cfg.circle_radius],...
     'FaceColor','none','EdgeColor','white','Curvature',[1,1],'LineWidth',4)
+
 %goals
 rectangle(ax ,'Position',[cfg.goal_posts(1,1)+cfg.line_thickness/2,cfg.goal_posts(1,2),cfg.goal_depth,-cfg.goal_posts(1,2)+cfg.goal_posts(2,2)],...
     'FaceColor','blue','EdgeColor','white','LineWidth',5)

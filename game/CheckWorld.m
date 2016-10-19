@@ -3,6 +3,10 @@ function [ p,b,w ] = CheckWorld(p,b,w,cfg)
 %   Updates player and ball for scoring, out of bounds, and players leaving
 %   field. Currently players are simply reset to sidelines without given timed
 %   penalty, but timed penalty could be added later if needed
+%   p - cell array of player objects
+%   b - ball object
+%   w - world object
+%   cfg - configuration
 
 
 %% Check ball out of bounds or in goal
@@ -26,7 +30,7 @@ if abs(bpos(2)) + cfg.ball_radius < cfg.goal_posts(2,2)
     goal = true;
 end
 
-%check which condition the ball is actuall in
+%check which condition the ball is actually in
 %out of bounds in Y direction
 if oobY
 

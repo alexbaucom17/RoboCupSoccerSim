@@ -10,14 +10,13 @@ classdef player
     %% public properties
     
     properties
-        pos %player position [x,y,a] (player will always think this is in the + direction)
-        vel_des %player desired velocity [x,y,a]
+        pos %player position [x,y,a] (global coordinates)
+        vel_des %player desired velocity [x,y,a] (local coordinates)
         kick %1 if player is attempting a kick, 0 otherwise
         gametime %total game time that has passed
         team_color %player color
         player_number %player number
         role %player role
-        pffs %potential field functions for all roles
     end
 
     
@@ -71,18 +70,12 @@ classdef player
     methods
         
         %class constructor
-        function obj = player(color,pos,num,teammates,cfg,pff_funcs,bh_list)
+        function obj = player(color,pos,num,teammates,cfg,bh_list)
            
             %defualt values
-            obj.pos = [0,0,0];
             obj.vel_des= [0,0,0];
             obj.vel = [0,0,0];
-            obj.num_teammates = 0;
             obj.prev_time = tic;
-            obj.team_color = 'black';
-            obj.player_number = 0;
-            obj.realtime = true;
-            obj.timestep = 0.1;
             obj.gametime = 0;
             obj.draw_handle = [];
             obj.text_handle = [];
@@ -97,30 +90,26 @@ classdef player
             obj.pos_des = [0,0,0];
             obj.bh_init = true;
             obj.local2globalTF = ones(3,3);
+            obj.team_color = color;
+            obj.pos = pos;
+            obj.player_number = num;
+            obj.num_teammates = teammates;
+            obj.cfg = cfg;
+            obj.timestep = cfg.timestep;
+            obj.realtime = cfg.realtime; 
+            obj.role = obj.player_number - 1;
+            obj.behavior_handle = bh_list;
+            if strcmp(color,'red')
+                obj.dir = 1;
+            else
+                obj.dir = -1;
+            end  
+            if obj.cfg.world_random_on
+                obj.world_function_handle = @get_world_random;
+            else
+                obj.world_function_handle = @get_world_exact;
+            end
             
-            %add in various arguements
-            if nargin >= 1; obj.team_color = color; end
-            if nargin >= 2; obj.pos = pos; end
-            if nargin >= 3; obj.player_number = num; end
-            if nargin >= 4; obj.num_teammates = teammates; end
-            if nargin >= 5  
-                obj.cfg = cfg;
-                obj.timestep = cfg.timestep;
-                obj.realtime = cfg.realtime; 
-                obj.role = obj.player_number - 1;
-                if strcmp(color,'red')
-                    obj.dir = 1;
-                else
-                    obj.dir = -1;
-                end  
-                if obj.cfg.world_random_on
-                    obj.world_function_handle = @get_world_random;
-                else
-                    obj.world_function_handle = @get_world_exact;
-                end
-            end    
-            if nargin >= 6; obj.pffs = pff_funcs; end 
-            if nargin >= 7; obj.behavior_handle = bh_list; end
         end
         
         
@@ -130,7 +119,7 @@ classdef player
             %'observe' information from the world/teammates
             world = obj.world_function_handle(w,obj.team_color,obj.player_number);
             
-            %update role (computed centrally to reduce time)
+            %update role (computed centrally to reduce time, see world file)
             obj.role = world.cur_player.role;
             
             %make behavioral decisions based on observed data
@@ -146,12 +135,11 @@ classdef player
             v = obj.vel;
         end
         
-        %sets velocity to 0
+        %sets velocity to 0 - only to be used for collisions/penalties
         function obj = SetZeroVel(obj)
             obj.vel = [0,0,0];
             obj.vel_des = [0,0,0];
         end
-        
         
         %overrides velocity - for collisions ONLY
         function obj = vel_override(obj,v)
@@ -238,8 +226,7 @@ classdef player
         end
         
         %updates postion and velocity based on current position, desired
-        %velocity, and time. It will do
-        %transformations to the player location based on current velocity
+        %velocity, and time
         function obj = update_pos(obj)
             
              if obj.realtime
@@ -284,8 +271,6 @@ classdef player
                 end
                 obj.vel(2) = sign(obj.vel(2)) * min(abs(obj.vel(2)),obj.cfg.player_MaxLinVelY);
                 obj.vel(3) = sign(obj.vel(3)) * min(abs(obj.vel(3)),obj.cfg.player_MaxAngVel);
-                
-               
                 
             end        
             

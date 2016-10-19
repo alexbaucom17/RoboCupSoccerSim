@@ -35,7 +35,7 @@ classdef ball
             obj.kick_loc = [];
         end
         
-        %set ball velocity
+        %set ball velocity - should only be done by kick/bumping routines
         function obj = set_vel(obj,vel)
             obj.vel = vel;
         end

@@ -148,7 +148,7 @@ classdef world
         %       but for all team members
         %   opTeam - info about opposing team. Same fields as cur_player,
         %       but for all enemy team members
-        %   teamball - info about team ball
+        %   teamball - info about team ball (for use if local ball isn't available)
         %       pos - global position of ball
         %       vel - global velocity of ball
         %   attackerID - id of attacker for use in behavior (for speed)
@@ -262,8 +262,9 @@ classdef world
         
         %function to centralize role switching
         %but runs basically the same code each robot would normally run
-        %individually, it just doesn't make sense to run it 5 times
-        %returns array of roles where each entry matches the player in the
+        %individually, it just doesn't make sense to run it 10 times for
+        %simulation
+        %creates array of roles where each entry matches the player in the
         %player list
         function obj = switch_roles(obj)
 
@@ -280,6 +281,7 @@ classdef world
             d_goal = sqrt(sum((world_info.posArray - defending_goals).^2,2));
             d_ball = sqrt(sum((world_info.posArray - repmat(world_info.teamball.pos,obj.cfg.num_players,1)).^2,2));
 
+            %calculate player eta to ball and distance to defensive goal
             %can make eta more advanced later if needed
             eta = d_ball/obj.cfg.player_MaxLinVelX(1);
             def = d_goal;
@@ -359,5 +361,5 @@ classdef world
  
     end %end methods block
             
-end
+end %end world class definition
 
