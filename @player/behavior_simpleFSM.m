@@ -41,7 +41,7 @@ else
 end
 
 %do calculations
-[ obj, nearPos, nearAng ] = obj.moveFn{obj.role+1}(obj,world,ball_global);
+[ obj, nearPos, nearAng ] = obj.behavior_handle{obj.role+1}(obj,world,ball_global);
 
 %check to see if we need to transition
 if nearAng && nearPos && obj.role == player.ATTACKER

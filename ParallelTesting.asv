@@ -7,14 +7,14 @@ addpath game pff
 disp('Initializing...')
 
 %set up configuration variables
-batch_size = 4; %ideally this should be a multiple of however many workers are in the parallel pool
+batch_size = 40; %ideally this should be a multiple of however many workers are in the parallel pool
 
 %list team behaviors to test
 bh_list = {'moveSimple', ...
            'movePff'};
 
 %override some config values for parallel testing
-cfg = Config();
+Config();
 cfg.drawgame = false;
 cfg.halflength = 300; %run 2 5 minute halves
 
@@ -56,6 +56,7 @@ for i = 1:num_batches
     
     %prep batch
     fprintf('Running batch %i of %i\n',i,num_batches)
+    fprintf('Expected run time is about %4.1f minutes...\n', batch_size/10);
     team1 = batch_combos(i,1);
     team2 = batch_combos(i,2);
     handle1 = bh(team1).handle;
@@ -93,3 +94,6 @@ for i = 1:num_batches
     
 end
 toc
+
+%% Post processing
+

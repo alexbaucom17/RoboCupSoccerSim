@@ -37,7 +37,7 @@ classdef player
         hitbox_handle %handle for player hitbox
         behaviorState %current behavior FSM state
         prev_ball %struct with last ball observation info
-        moveFn %handle to movement functions
+        behavior_handle %handle to behavior function
         pos_des %desired position
         world_function_handle %handle to world function
         bh_init %flag if FSM needs to init next behavior state
@@ -71,7 +71,7 @@ classdef player
     methods
         
         %class constructor
-        function obj = player(color,pos,num,teammates,cfg,pff_funcs,mv_list)
+        function obj = player(color,pos,num,teammates,cfg,pff_funcs,bh_list)
            
             %defualt values
             obj.pos = [0,0,0];
@@ -120,7 +120,7 @@ classdef player
                 end
             end    
             if nargin >= 6; obj.pffs = pff_funcs; end 
-            if nargin >= 7; obj.moveFn = mv_list; end
+            if nargin >= 7; obj.behavior_handle = bh_list; end
         end
         
         
