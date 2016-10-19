@@ -3,7 +3,7 @@
 close all
 clear
 rng('shuffle')
-addpath game pff
+addpath game
 disp('Initializing...')
 
 %set up configuration variables

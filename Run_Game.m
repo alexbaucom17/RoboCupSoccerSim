@@ -6,7 +6,7 @@ clear
 rng('shuffle')
 
 %set up configuration variables
-addpath game pff
+addpath game
 cfg = Config();
 cfg.drawgame = true;
 
