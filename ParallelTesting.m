@@ -1,6 +1,8 @@
 %A script to run many simulations between various behaviors and compare how
 %they perform
 
+%Requires the Parallel Computing Toolbox to run the parfor loop
+
 %% Initialization
 close all
 clear
@@ -13,7 +15,7 @@ batch_size = 4; %ideally this should be a multiple of however many workers are i
 
 %list team behaviors to test
 bh_list = {'moveSimple', ...
-           'movePff'};
+           'moveSimplePff'};
 
 %override some config values for parallel testing
 cfg = Config();
@@ -64,7 +66,11 @@ for i = 1:num_batches
     handle2 = bh(team2).handle;
     bh_list =  cat(1,repmat({handle1},cfg.num_players_red,1),...
              repmat({handle2},cfg.num_players_blue,1));
-    
+   
+    if cfg.num_players_red ~= cfg.num_players_blue
+        error('Teams with different numbers of players is currently not supported')
+    end
+         
     %run batch
     parfor j = 1:batch_size
         stats1 = GameController(C,bh_list);
@@ -95,3 +101,6 @@ for i = 1:num_batches
     
 end
 toc
+
+%add some output or results processing here
+%or just be lazy and open the bh struct in the variable window
