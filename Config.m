@@ -20,9 +20,10 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 3;
-cfg.num_players_blue = 3;
+cfg.num_players_red = 1;
+cfg.num_players_blue = 1;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
+
 
 %starting positions
 cfg.start_pos(2,:) = [-1,0,0];
@@ -37,13 +38,24 @@ cfg.start_pos(9,:) = [2,-1,pi];
 cfg.start_pos(10,:) = [3,-0.5,pi];
 cfg.start_pos(6,:) = [3,0.5,pi];
 
+%starting roles
+%Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+cfg.force_initial_roles = true;
+if cfg.force_initial_roles
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+else
+    cfg.start_roles_red = [0 1 2 3 4];
+    cfg.start_roles_blue = [0 1 2 3 4];
+end
+
 %ball parameters
-cfg.ball_radius = 0.05; %m
+cfg.ball_radius = 0.04; %m
 cfg.ball_friction = 0.45; %m/s^2 
 cfg.MinBallVel = 0.01; %m/s
 
 %player parameters
-cfg.player_hitbox_radius = 0.13; %m
+cfg.player_hitbox_radius = 0.1; %m
 cfg.player_accelLin = [0.04,0.02]; %m/s^2
 cfg.player_accelAng = 0.04; %rad/s^2
 cfg.player_MaxLinVelX = [0.1,-0.04]; %m/s
@@ -75,10 +87,14 @@ cfg.oobLineY = cfg.field_width-0.25;
 cfg.oobLineX = cfg.field_length - 0.5;
 
 %behavior
-cfg.closetoPos = 0.1; %m
-cfg.closetoAng = 20*pi/180;
+cfg.closetoPos = 0.3; %m
+cfg.closetoAng = 20*pi/180; %rad
+cfg.closetoPosKick = 0.15; %m
+cfg.closetoAngKick = 10*pi/180; %rad
+cfg.closetoAngGoalie = 40*pi/180; %rad
 cfg.ballLostTime = 1; %sec
 cfg.GoalieGoThresh = 1; %m
+cfg.GoalieMaxRange = 1.5; %m - distance goalie can move away from goalline
 cfg.GoalieHomeDist = 0.3;
 cfg.SupportDistX = 0.75;
 cfg.SupportDistY = 0.5;

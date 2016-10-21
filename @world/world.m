@@ -38,7 +38,7 @@ classdef world
             obj.world_random.seeball = zeros(obj.cfg.num_players,1);
             obj.world_exact.seeball = ones(obj.cfg.num_players,1);
             obj.line_handles = [];
-            obj.roles = [1:obj.cfg.num_players_red,1:obj.cfg.num_players_blue]'-1;
+            obj.roles = [obj.cfg.start_roles_red(1:obj.cfg.num_players_red) obj.cfg.start_roles_blue(1:obj.cfg.num_players_blue)]';
             obj.num_oob = [0,0];
             obj.own_goals = [0,0];
             obj.num_kicks = [0,0];
@@ -205,7 +205,7 @@ classdef world
         function world_info = get_world_random(obj,clr,num)
                
             %find attackers
-            attackerIDs = find(obj.roles == player.ATTACKER);
+            attackerIDs = obj.get_attacker_ids();
             
              %get proper goals + team specific info
             if strcmp(clr,'red')
@@ -316,9 +316,22 @@ classdef world
                     continue
                 end
 
-                %remove goalie number from lists
-                eta_idx(eta_idx == 1) = [];
-                def_idx(def_idx == 1) = [];
+                %remove goalie number from lists and force it to remain
+                %player 1 is always goalie as default
+                if ~obj.cfg.force_initial_roles
+                    eta_idx(eta_idx == 1) = [];
+                    def_idx(def_idx == 1) = [];
+                    cur_roles(1) = player.GOALIE;
+                else
+                    %check to see if this game has goalies
+                    goalie_id = find(obj.roles(role_idx) == player.GOALIE);
+                    if any(goalie_id)
+                        eta_idx(eta_idx==goalie_id) = [];
+                        def_idx(eta_idx==goalie_id) = [];
+                        cur_roles(goalie_id) = player.GOALIE;
+                    end
+                end
+                
 
                 %get number if roles to assign
                 n = length(eta_idx);
@@ -346,9 +359,6 @@ classdef world
                 if n >= 4
                     cur_roles(cur_roles == 0) = player.DEFENDER2;
                 end
-
-                %player 1 is always goalie
-                cur_roles(1) = player.GOALIE;
 
                 %put these roles into world object role list
                 obj.roles(role_idx) = cur_roles;

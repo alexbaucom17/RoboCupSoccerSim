@@ -23,7 +23,7 @@ if obj.role == player.ATTACKER
     %find desired position
     n = [cos(ang_des), sin(ang_des)];
     pos_des(1:2) = ball_global - n*(obj.cfg.player_hitbox_radius);
-    pos_des(3) = ang_des;
+    pos_des(3) = atan2(dpBall(2),dpBall(1));
     
 elseif obj.role == player.SUPPORTER
     attacker_pos = world.myTeam(attacker_num).pos;
@@ -43,7 +43,7 @@ elseif obj.role == player.DEFENDER
     pos_des(2) = 0.5*ball_global(2);
     pos_des(3) = atan2(dpBall(2),dpBall(1));
 elseif obj.role == player.GOALIE
-    if norm(dpBall) < obj.cfg.GoalieGoThresh
+    if norm(dpBall) < obj.cfg.GoalieGoThresh && norm(dpGoalDef) < obj.cfg.GoalieMaxRange
         %find desired angle
         ang_des = atan2(dpBall(2),dpBall(1));
         %find desired position

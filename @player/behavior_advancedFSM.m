@@ -1,4 +1,4 @@
-function obj = behavior_simpleFSM(obj,world) 
+function obj = behavior_advancedFSM(obj,world) 
 %BEHAVIOR runs simple fsm to simulate player behavior
 
 %simple FSM
@@ -8,6 +8,8 @@ elseif obj.behaviorState == player.MOVE
     obj = behavior_move(obj,world);
 elseif obj.behaviorState == player.SEARCH;
     obj = behavior_search(obj,world);
+elseif obj.behaviorState == player.APPROACH;
+    obj = behavior_approach(obj,world);
 else
     obj.behaviorState = player.SEARCH;
     obj = behavior_search(obj,world);
@@ -41,21 +43,13 @@ else
 end
 
 %do calculations
-[ obj, nearPos, nearAng ] = obj.behavior_handle{obj.get_bh_id()}(obj,world,ball_global);
+[ obj, nearPos, ~ ] = obj.behavior_handle{obj.get_bh_id()}(obj,world,ball_global);
 
 %check to see if we need to transition
-if nearAng && nearPos && obj.role == player.ATTACKER
-    obj.behaviorState = player.KICK;
+if nearPos && (obj.role == player.ATTACKER || (obj.role == player.GOALIE && norm(world.cur_player.ball_local) < obj.cfg.GoalieGoThresh))
+    obj.behaviorState = player.APPROACH;
     obj.bh_init = true; 
 end
-
-%check to see if we need to transition
-if nearAng && nearPos && obj.role == player.GOALIE
-    obj.behaviorState = player.KICK;
-    obj.bh_init = true; 
-end
-
-
 
 end
 
@@ -88,6 +82,48 @@ function obj = behavior_kick(obj,world)
 obj.kick = 1;
 obj.behaviorState = player.SEARCH;
 obj.bh_init = true;
+
+end
+
+function obj = behavior_approach(obj,world)
+
+%check to make sure we can still see the ball
+if isempty(world.cur_player.ball_local)
+    obj.behaviorState = player.SEARCH;
+    obj.bh_init = true;
+end
+
+if norm(world.cur_player.ball_local) > obj.cfg.closetoPos
+    obj.behaviorState = player.MOVE;
+    obj.bh_init = true;
+end
+
+%get info about the world
+ball_global = world.cur_player.pos(1:2) + world.cur_player.ball_local;
+pose_global = world.cur_player.pos;
+goal_attack = world.goal_attack;
+
+%find desired angle (want to point towards attacking goal)
+dpGoal = goal_attack - pose_global(1:2);
+ang_des = atan2(dpGoal(2),dpGoal(1));
+
+%find desired position (behind ball in line with goal)
+n = [cos(ang_des), sin(ang_des)];
+pos_des(1:2) = ball_global - n*(obj.cfg.player_hitbox_radius);
+
+%stay pointing at ball while moving to position
+dpBall = world.cur_player.ball_local;
+pos_des(3) = atan2(dpBall(2),dpBall(1));
+
+%update desired pose and calculate velocity
+obj.pos_des = pos_des;
+[ obj.vel_des,nearPos,nearAng ] = obj.velSimple(world);
+
+if nearAng && nearPos
+    obj.behaviorState = player.KICK;
+    obj.bh_init = true; 
+end   
+
 
 end
 

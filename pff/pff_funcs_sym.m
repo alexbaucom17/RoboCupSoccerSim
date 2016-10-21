@@ -6,6 +6,12 @@ function [ fns ] = pff_funcs_sym( cfg )
 syms dball dshotpath dshotpathDef dgoalAtt dgoalDef
 dsideline = sym('dside',[1,4]);
 dteammate = sym('dmate',[1,cfg.num_players_red-1]);
+if isempty(dteammate)
+    dteammate = sym('dmate',[1,1]);
+    no_team = true;
+else
+    no_team = false;
+end
 dist_names = {dball dshotpath dshotpathDef dgoalAtt dgoalDef dsideline dteammate};
 
 %set up basic attracitve and repulsive functions
@@ -41,6 +47,9 @@ for i = 1:num_players
             loop = 4;
         elseif strcmp(char(dname(1)),'dmate1')
             loop = length(dname);
+            if no_team
+                w = [0,0,0];
+            end
         else
             loop = 1;
         end

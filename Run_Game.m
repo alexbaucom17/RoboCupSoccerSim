@@ -18,12 +18,18 @@ blue_team = @movePff;
 bh_list = [repmat({red_team},cfg.num_players_red,1); repmat({blue_team},cfg.num_players_blue,1)];
 
 %uncomment to set up individual behaviors
+%red_player = player.ATTACKER;
+%blue_player = player.ATTACKER;
+%test_behavior = @movePff
+%red_idx = obj.cfg.start_roles_red(1:cfg.num_players_red) == red_player 
+%blue_idx = obj.cfg.start_roles_blue(1:cfg.num_players_blue) == blue_player
+%idx = [red_idx blue_idx]
+%bh_list(idx) = {@test_behavior};
+
+%uncomment to load weights from data
 %load data/NM_test14_weights_AllThree
 %cfg.pff_weights = new_pff_weights;
-%bh_list(1) = {@behavior_test_pff2}; %red team player
-%bh_list(cfg.num_players_red+2) = {@behavior_test_pff2}; %blue team player
-
-         
+      
 %run game
 [stats,scores] = GameController(cfg,bh_list);
 
