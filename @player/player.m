@@ -35,8 +35,6 @@ classdef player
         text_handle %handle for player number
         text_handle2 %handle for player role
         hitbox_handle %handle for player hitbox
-        nearPos %flag if near desired position
-        nearAng %flag if near desired angle
         behaviorState %current behavior FSM state
         prev_ball %struct with last ball observation info
         behavior_handle %handle to behavior function
@@ -92,8 +90,6 @@ classdef player
             obj.hitbox_handle = [];
             obj.kick = 0;
             obj.cfg = [];
-            obj.nearPos = false;
-            obj.nearAng = false;
             obj.role = [];
             obj.behaviorState = player.SEARCH;
             obj.prev_ball.time = 0;
@@ -138,7 +134,7 @@ classdef player
             obj.role = world.cur_player.role;
             
             %make behavioral decisions based on observed data
-            obj = obj.behavior_handle{obj.role+1}(obj,world);
+            obj = behavior_simpleFSM(obj,world);
            
             %update kinematics based on desired velocity
             obj = update_pos(obj);

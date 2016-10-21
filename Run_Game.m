@@ -11,8 +11,8 @@ cfg = Config();
 cfg.drawgame = true;
 
 %set up behavior
-red_team = @behavior_test_pff;
-blue_team = @behavior_test_pff;    
+red_team = @moveSimple;
+blue_team = @movePff;    
 
 %behaviors
 bh_list = [repmat({red_team},cfg.num_players_red,1); repmat({blue_team},cfg.num_players_blue,1)];

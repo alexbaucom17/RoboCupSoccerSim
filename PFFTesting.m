@@ -24,8 +24,8 @@ cfg.debug = true;
 cfg.ball_start = [0,0];
 cfg.pff_testing = true;
 
-bh_list =  cat(1,repmat({@behavior_test_pff2},cfg.num_players_red,1),...
-             repmat({@behavior_test_pff2},cfg.num_players_blue,1));
+bh_list =  cat(1,repmat({@movePff},cfg.num_players_red,1),...
+             repmat({@movePff},cfg.num_players_blue,1));
 
 %set up world
 w = world(cfg);
