@@ -8,7 +8,7 @@ addpath game pff NM NM/StructSort
 disp('Initializing...')
 
 %File to load from if restarting test, otherwise leave blank
-load_from_file = ''; %'data/NM_Runs/NM_2016-10-10-14-40-08.mat';
+load_from_file = ''; %'data/NM_Runs/NM_2016-10-28-09-14-47.mat';
 
 %save after this many iteration
 save_after = 25; %iterations
@@ -36,9 +36,17 @@ cfg = Config();
 cfg.drawgame = false;
 cfg.halflength = 300; %run 2 5 minute halves to remove any side advantage
 
+%error/sanity checks
+if ~all(cfg.start_roles_red ==  cfg.start_roles_blue) 
+    error('Start roles must match for each team')
+elseif cfg.num_players_red ~= cfg.num_players_blue
+    error('Number of players must match for each team')
+end
+
 %set up behavior list
 bh_list = repmat({default_behavior},cfg.num_players,1);
-bh_list(cfg.training_role) = {test_behavior};
+training_idx = find(cfg.start_roles_red(1:cfg.num_players_red) == cfg.training_role-1); 
+bh_list(training_idx) = {test_behavior};
 
 %loop counter
 n = 0;
@@ -118,3 +126,14 @@ fprintf('It took %4.1f seconds to run %i iterations\n',t,n-1)
 
 %estimate final parameters based on simplex
 new_pff_weights = estimate_final_parameters(S,cfg);
+
+%save file
+s1 = 'data/NM_';
+fmt = 'yyyy-mm-dd-HH-MM-SS';
+s2 = datestr(now,fmt);  
+s3 = '';
+for i = cfg.training_role
+    s3 = [s3,player.roleNames{i}];
+end
+fname = strcat(s1,s2,s3);
+save(fname, 'new_pff_weights');

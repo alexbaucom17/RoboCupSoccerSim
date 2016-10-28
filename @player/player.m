@@ -55,6 +55,7 @@ classdef player
         DEFENDER = 2;
         SUPPORTER = 3;
         DEFENDER2 = 4;
+        NONE = 5;
         
         %states
         SEARCH = 0;

@@ -18,14 +18,17 @@ sample_dY = obj.cfg.local_sample_distance*sin(samples);
 sampleX = pos_cur(1) + sample_dX; 
 sampleY = pos_cur(2) + sample_dY;
 
+%append our current position to samples to only need 1 function call
+sampleX = [sampleX pos_cur(1)];
+sampleY = [sampleY pos_cur(2)];
+
 %use symoblic pffs
 pff = obj.pffs{obj.role+1};
-[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate] ...
                 = calculate_distances2(obj.cfg,[sampleX',sampleY'],pos_cur(3),ball_global,team_pos,obj.dir);
-P = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
-[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
-                = calculate_distances2(obj.cfg,[pos_cur(1),pos_cur(2)],pos_cur(3),ball_global,team_pos,obj.dir);
-cur_val = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
+P = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate);
+cur_val = P(end);
+P = P(1:end-1);
 
 
 %find direction of new velocity along best gradient

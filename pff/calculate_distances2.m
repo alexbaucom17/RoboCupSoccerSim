@@ -1,4 +1,4 @@
-function [dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+function [dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate] ...
                 = calculate_distances2(cfg,Pxy,Pa,Bxy,Txy,dir)
 
 %distance to boundaries
@@ -16,9 +16,6 @@ dxyteam = Txy-repmat(Pxy,1,1,n);
 Dteam = sqrt(sum(dxyteam.^2,2));
 dteammate = permute(Dteam,[1,3,2]);
 
-%distance behind ball
-%D.behindball = dir*(Bxy(1) - Pxy(1));
-
 %distance to attacking shot path
 goal_attack = [dir*cfg.goal_posts(1),0];
 dshotpath = point_to_line(Pxy,Bxy,goal_attack); 
@@ -30,6 +27,10 @@ dshotpathDef = point_to_line(Pxy,Bxy,goal_def);
 %distance to goals
 dgoalAtt = abs(goal_attack(1) - Pxy(:,1));
 dgoalDef = abs(Pxy(:,1) - goal_def(1));
+
+%intercation terms to force behind ball
+d1 = -dir*(repmat(Bxy(1),size(Pxy,1),1) - Pxy(:,1)-0.05);
+dbehindball = max(d1 * 1./(dshotpath+1), 0.001*ones(size(d1)));
 
 
 end

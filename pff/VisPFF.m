@@ -34,9 +34,9 @@ team_pos = team_pos(:,1:2);
 pff = p{num}.pffs{p{num}.role+1};
 x = reshape(X,[],1);
 y = reshape(Y,[],1);
-[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate] ...
+[dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate] ...
                 = calculate_distances2(cfg,[x,y],0,ball_global,team_pos,dir);
-z = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dsideline,dteammate);
+z = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate);
 Z = reshape(z,size(X));
 
 

@@ -11,24 +11,24 @@ cfg = Config();
 cfg.drawgame = true;
 
 %set up behavior
-red_team = @moveSimple;
-blue_team = @movePff;    
+red_team = @movePff;
+blue_team = @moveSimple;    
 
 %behaviors
 bh_list = [repmat({red_team},cfg.num_players_red,1); repmat({blue_team},cfg.num_players_blue,1)];
 
 %uncomment to set up individual behaviors
-%red_player = player.ATTACKER;
-%blue_player = player.ATTACKER;
-%test_behavior = @movePff
-%red_idx = obj.cfg.start_roles_red(1:cfg.num_players_red) == red_player 
-%blue_idx = obj.cfg.start_roles_blue(1:cfg.num_players_blue) == blue_player
-%idx = [red_idx blue_idx]
-%bh_list(idx) = {@test_behavior};
+% red_player = player.DEFENDER;
+% blue_player = player.NONE;
+% test_behavior = @movePff;
+% red_idx = cfg.start_roles_red(1:cfg.num_players_red) == red_player ;
+% blue_idx = cfg.start_roles_blue(1:cfg.num_players_blue) == blue_player;
+% idx = [red_idx blue_idx];
+% bh_list(idx) = {test_behavior};
 
 %uncomment to load weights from data
-%load data/NM_test14_weights_AllThree
-%cfg.pff_weights = new_pff_weights;
+% load data/NM_2016-10-28-12-23-34AttackerDefender
+% cfg.pff_weights = new_pff_weights;
       
 %run game
 [stats,scores] = GameController(cfg,bh_list);

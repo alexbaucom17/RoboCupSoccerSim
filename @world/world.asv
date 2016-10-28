@@ -83,7 +83,6 @@ classdef world
                 obj.world_exact.players(i).role = obj.roles(i);
                 obj.world_exact.players(i).ball_local = b.pos - p{i}.pos(1:2);
                 obj.world_exact.posArray(i,1:2) = p{i}.pos(1:2);
-                obj.world_exact.angles(i) = p{i}.pos(3);
                 
                 %generate noise
                 pos_noise = randn(1,2);
@@ -99,7 +98,6 @@ classdef world
                 obj.world_random.players(i).pos = p{i}.pos + [pos_noise, ang_noise];
                 obj.world_random.players(i).vel = p{i}.get_vel();
                 obj.world_random.posArray(i,1:2) = obj.world_random.players(i).pos(1:2);
-                obj.world_random.angles(i) = obj.world_random.players(i).pos(3);
                 
                 %only get local ball info if player can see it
                 if obj.world_random.seeball(i) == 1
@@ -280,15 +278,15 @@ classdef world
             defending_goals = [repmat(obj.redGoal,obj.cfg.num_players_red,1);
                                repmat(obj.blueGoal,obj.cfg.num_players_blue,1)];
             d_goal = sqrt(sum((world_info.posArray - defending_goals).^2,2));
-            d_ball_xy = repmat(world_info.teamball.pos,obj.cfg.num_players,1) -  world_info.posArray;
+            d_ball_xy = world_info.posArray - repmat(world_info.teamball.pos,obj.cfg.num_players,1);
             d_ball = sqrt(sum(d_ball_xy.^2,2));
-            da_ball = atan2(d_ball_xy(:,2),d_ball_xy(:,1)) - world_info.angles';
-            idx = abs(da_ball) > pi;
-            da_ball(idx) = 2*pi-abs(da_ball(idx));
-
+            a_ball = atan2(d_ball_xy(:,2),d_ball_xy(:,1));
+            
+            for 
+            angles
 
             %can make eta more advanced later if needed
-            eta = d_ball/obj.cfg.player_MaxLinVelX(1) + abs(da_ball)/obj.cfg.player_MaxAngVel;
+            eta = d_ball/obj.cfg.player_MaxLinVelX(1);
             def = d_goal;
 
             %add any penalties

@@ -3,7 +3,7 @@ function [ fns ] = pff_funcs_sym( cfg )
 %   Detailed explanation goes here
 
 %set up pff variable names
-syms dball dshotpath dshotpathDef dgoalAtt dgoalDef
+syms dball dshotpath dshotpathDef dgoalAtt dgoalDef dbehindball
 dsideline = sym('dside',[1,4]);
 dteammate = sym('dmate',[1,cfg.num_players_red-1]);
 if isempty(dteammate)
@@ -12,7 +12,7 @@ if isempty(dteammate)
 else
     no_team = false;
 end
-dist_names = {dball dshotpath dshotpathDef dgoalAtt dgoalDef dsideline dteammate};
+dist_names = {dball dshotpath dshotpathDef dgoalAtt dgoalDef dbehindball dsideline dteammate};
 
 %set up basic attracitve and repulsive functions
 syms gain offset rang d

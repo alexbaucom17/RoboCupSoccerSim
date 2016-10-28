@@ -11,8 +11,8 @@ cfg = Config();
 
 %override some configurations for potential field testing
 cfg.start_pos(2,:) = [4,2.5,0];      %red attacker
-cfg.start_pos(3,:) = [1.5,0,0];     %red defender
-cfg.start_pos(4,:) = [-1.5,-0.5,0];      %red supporter
+cfg.start_pos(3,:) = [-1,2,0];     %red defender
+cfg.start_pos(4,:) = [2.5,0,0];      %red supporter
 cfg.start_pos(5,:) = [-3,1,0];   %red defender2
 cfg.start_pos(1,:) = [-4,0,0];    %red goalie
 cfg.start_pos(7,:) = [0.5,0.5,pi];      %blue attacker
@@ -23,6 +23,9 @@ cfg.start_pos(6,:) = [4,0,pi];    %blue goalie
 cfg.debug = true;
 cfg.ball_start = [0,0];
 cfg.pff_testing = true;
+cfg.num_players_red = 5;
+cfg.num_players_blue = 5;
+cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
 
 bh_list =  cat(1,repmat({@movePff},cfg.num_players_red,1),...
              repmat({@movePff},cfg.num_players_blue,1));
@@ -81,7 +84,7 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 2; %player to visualize
+num = 4; %player to visualize
 clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 

@@ -91,6 +91,7 @@ function obj = behavior_approach(obj,world)
 if isempty(world.cur_player.ball_local)
     obj.behaviorState = player.SEARCH;
     obj.bh_init = true;
+    return
 end
 
 if norm(world.cur_player.ball_local) > obj.cfg.closetoPos
