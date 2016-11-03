@@ -28,7 +28,7 @@ dshotpathDef = point_to_line(Pxy,Bxy,goal_def);
 dgoalAtt = abs(goal_attack(1) - Pxy(:,1));
 dgoalDef = abs(Pxy(:,1) - goal_def(1));
 
-%intercation terms to force behind ball
+%interaction terms to force behind ball
 d1 = -dir*(repmat(Bxy(1),size(Pxy,1),1) - Pxy(:,1)-0.05);
 dbehindball = max(d1 * 1./(dshotpath+1), 0.001*ones(size(d1)));
 

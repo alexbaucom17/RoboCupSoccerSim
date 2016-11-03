@@ -110,7 +110,7 @@ ang_des = atan2(dpGoal(2),dpGoal(1));
 
 %find desired position (behind ball in line with goal)
 n = [cos(ang_des), sin(ang_des)];
-pos_des(1:2) = ball_global - n*(obj.cfg.player_hitbox_radius);
+pos_des(1:2) = ball_global - n*(obj.cfg.player_hitbox_radius+obj.cfg.ball_radius);
 
 %stay pointing at ball while moving to position
 dpBall = world.cur_player.ball_local;
@@ -119,6 +119,8 @@ pos_des(3) = atan2(dpBall(2),dpBall(1));
 %update desired pose and calculate velocity
 obj.pos_des = pos_des;
 [ obj.vel_des,nearPos,nearAng ] = obj.velSimple(world);
+
+% obj.vel_des = 0.1*obj.vel_des;
 
 if nearAng && nearPos
     obj.behaviorState = player.KICK;

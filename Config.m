@@ -20,8 +20,8 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 2;
-cfg.num_players_blue = 2;
+cfg.num_players_red = 5;
+cfg.num_players_blue = 5;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
 
 
@@ -40,7 +40,7 @@ cfg.start_pos(6,:) = [3,0.5,pi];
 
 %starting roles
 %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
-cfg.force_initial_roles = true;
+cfg.force_initial_roles = false;
 if cfg.force_initial_roles
     cfg.start_roles_red = [1 2 3 4 0];
     cfg.start_roles_blue = [1 2 3 4 0];
@@ -63,7 +63,7 @@ cfg.player_MaxLinVelY = 0.04;
 cfg.player_MaxAngVel = 0.2; %rad/s
 
 %kick parameters
-cfg.kick_thresh = 0.1;
+cfg.kick_thresh = 0.05;
 cfg.kick_ang_thresh = 30*pi/180;
 cfg.kick_fail_thresh = 0.05;
 cfg.max_kick_power = 2.1;
@@ -87,10 +87,10 @@ cfg.oobLineY = cfg.field_width-0.25;
 cfg.oobLineX = cfg.field_length - 0.5;
 
 %behavior
-cfg.closetoPos = 0.3; %m
+cfg.closetoPos = 0.4; %m
 cfg.closetoAng = 20*pi/180; %rad
 cfg.closetoPosKick = 0.15; %m
-cfg.closetoAngKick = 10*pi/180; %rad
+cfg.closetoAngKick = 5*pi/180; %rad
 cfg.closetoAngGoalie = 40*pi/180; %rad
 cfg.ballLostTime = 1; %sec
 cfg.GoalieGoThresh = 1; %m
@@ -116,31 +116,31 @@ cfg.world_seeBallFOV = 120*pi/180;
 
 %Potential Field Function
 %attractive                       %goalie attacker defender supporter defender2  
-pff_weights.ball_range         = [   0.75   10       0         9      0.2];
-pff_weights.ball_offset        = [   0.01   0        0         0       10];
-pff_weights.ball_gain          = [   5      5        0         1        1];
-pff_weights.shotpath_range     = [   0      10       0         0        1];
-pff_weights.shotpath_offset    = [   0      0.1      0         0      0.5];
-pff_weights.shotpath_gain      = [   0      20       0         0        3];
-pff_weights.shotpathDef_range  = [   10     0        9         0        1];
+pff_weights.ball_range         = [   0.75   10       0         9        0 ];
+pff_weights.ball_offset        = [   0.01   0        0         2        0 ];
+pff_weights.ball_gain          = [   5      5        0         5        0 ];
+pff_weights.shotpath_range     = [   0      10       0         9        0 ];
+pff_weights.shotpath_offset    = [   0      0.1      0         2        0 ];
+pff_weights.shotpath_gain      = [   0      20       0         5        0 ];
+pff_weights.shotpathDef_range  = [   10     0        9         0        9 ];
 pff_weights.shotpathDef_offset = [   0.01   0        0.01      0        0.5];
-pff_weights.shotpathDef_gain   = [   4      0        2         0        3];
-pff_weights.goalAtt_range      = [   0      0        0         0        1];
-pff_weights.goalAtt_offset     = [   0      0        0         0        0];
-pff_weights.goalAtt_gain       = [   0      0        0         0        0];
-pff_weights.goalDef_range      = [   9      0        10        0        1];
-pff_weights.goalDef_offset     = [   0.5    0        1.5       0        0];
-pff_weights.goalDef_gain       = [   4      0        3         0        0];
-pff_weights.Bball_range        = [   0      9        9         9        0];
-pff_weights.Bball_offset       = [   0      0        0         0        0];
-pff_weights.Bball_gain         = [   0      9        9         9        0];
+pff_weights.shotpathDef_gain   = [   4      0        2         0        3 ];
+pff_weights.goalAtt_range      = [   0      0        0         3        0 ];
+pff_weights.goalAtt_offset     = [   0      0        0         2        0 ];
+pff_weights.goalAtt_gain       = [   0      0        0         1        0 ];
+pff_weights.goalDef_range      = [   9      0        10        0        9 ];
+pff_weights.goalDef_offset     = [   0.5    0        1.5       0        2.5 ];
+pff_weights.goalDef_gain       = [   4      0        3         0        2 ];
+pff_weights.Bball_range        = [   0      9        9         2        9 ];
+pff_weights.Bball_offset       = [   0      0        0         0        0 ];
+pff_weights.Bball_gain         = [   0      50       9         1        9 ];
 %repulsive
-pff_weights.sideline_range     = [   0.1    0.2      0.2       0        0];
+pff_weights.sideline_range     = [   0.1    0.2      0.2       0.2      0.2];
 pff_weights.sideline_offset    = [   0      0        0         0        0];
-pff_weights.sideline_gain      = [   1      1        1         2        0];
-pff_weights.teammate_range     = [   0      0.5      1         0        0];
-pff_weights.teammate_offset    = [   0      0        0         0        0];
-pff_weights.teammate_gain      = [   0      0.5      0.5       2        0];
+pff_weights.sideline_gain      = [   1      1        1         1        1 ];
+pff_weights.teammate_range     = [   0      0.5      1         1        1 ];
+pff_weights.teammate_offset    = [   0      0        0         0        0 ];
+pff_weights.teammate_gain      = [   0      0.5      0.5       0.5      0.5];
 
 %more pff parameters
 cfg.pff_fun_desc = [1 1 1 1 1 1 0 0];
@@ -161,11 +161,11 @@ cfg.ownGoalAgainstPts = -100;
 cfg.kickPts = 0;
 
 %Nelder mead learning parameters and calculations
-cfg.training_role = [2,3];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
+cfg.training_role = [2];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
 cfg.NM_fn_thresh = 50;
 cfg.NM_domain_thresh = 0.1;
 cfg.NM_weight_penalty = 0;
-cfg.NM_initial_step_size = 1;
+cfg.NM_initial_step_size = 2;
 %override initial weights if desired
 % load data/NM_2016-10-28-12-23-34AttackerDefender
 % cfg.pff_weights = new_pff_weights;

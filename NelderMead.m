@@ -8,7 +8,7 @@ addpath game pff NM NM/StructSort
 disp('Initializing...')
 
 %File to load from if restarting test, otherwise leave blank
-load_from_file = ''; %'data/NM_Runs/NM_2016-10-28-09-14-47.mat';
+load_from_file = ''; %'data/NM_Runs/NM_2016-11-03-08-23-24.mat';
 
 %save after this many iteration
 save_after = 25; %iterations
@@ -19,7 +19,7 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 100;
+max_iter = 5;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
@@ -60,6 +60,12 @@ else
     p.updateAttachedFiles();
 end  
 
+%timer
+t_start = tic;
+if ~exist('t_elapsed','var')
+    t_elapsed = 0;
+end
+
 %% Set up initial simplex
 
 %create a new simplex from scratch
@@ -68,7 +74,6 @@ if isempty(load_from_file)
     S = generate_simplex(cfg);
 
     %get scores for all vertices
-    tic
     for i = 1:(cfg.NM_dim+1)
         fprintf('Scoring vertex %i out of %i\n',i,cfg.NM_dim+1)
         S(i).score = score_vertex(S(i).vertex,C,bh_list,batch_size,cfg);
@@ -106,7 +111,7 @@ while n <= max_iter
     
     %save every so often
     if mod(n,save_after) == 0
-        SaveData(S,cfg,n,bh_list)
+        SaveData(S,cfg,n,bh_list,t_start)
     end
     
     %Test for termination
@@ -121,8 +126,8 @@ else
     disp('Search has reached max iterations')
 end
 
-t = toc;
-fprintf('It took %4.1f seconds to run %i iterations\n',t,n-1)
+t = toc(t_start);
+fprintf('It took %4.1f seconds to run %i iterations\n',t+t_elapsed,n-1)
 
 %estimate final parameters based on simplex
 new_pff_weights = estimate_final_parameters(S,cfg);

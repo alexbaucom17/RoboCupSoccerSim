@@ -276,19 +276,33 @@ classdef world
                 world_info = obj.world_exact;
             end
 
-            %calc dist to goal and team ball
+            %build array of goals for easy calculations
             defending_goals = [repmat(obj.redGoal,obj.cfg.num_players_red,1);
                                repmat(obj.blueGoal,obj.cfg.num_players_blue,1)];
+            attacking_goals = [repmat(obj.blueGoal,obj.cfg.num_players_red,1);
+                               repmat(obj.redGoal,obj.cfg.num_players_blue,1)];
+            %distance to defensive goal
             d_goal = sqrt(sum((world_info.posArray - defending_goals).^2,2));
+            %distance to ball
             d_ball_xy = repmat(world_info.teamball.pos,obj.cfg.num_players,1) -  world_info.posArray;
             d_ball = sqrt(sum(d_ball_xy.^2,2));
-            da_ball = atan2(d_ball_xy(:,2),d_ball_xy(:,1)) - world_info.angles';
+            %angle to ball
+            a_ball = atan2(d_ball_xy(:,2),d_ball_xy(:,1));
+            da_ball = a_ball - world_info.angles';
             idx = abs(da_ball) > pi;
             da_ball(idx) = 2*pi-abs(da_ball(idx));
-
-
-            %can make eta more advanced later if needed
-            eta = d_ball/obj.cfg.player_MaxLinVelX(1) + abs(da_ball)/obj.cfg.player_MaxAngVel;
+            %angle to attacking goal
+            xy_goal_att = attacking_goals - world_info.posArray;
+            da_goal = atan2(xy_goal_att(:,2),xy_goal_att(:,1)) - a_ball;
+            idx = abs(da_goal) > pi;
+            da_goal(idx) = 2*pi-abs(da_goal(idx));
+            
+            
+            %ETA = time to reach ball, time to turn towards ball, time to
+            %turn towards goal
+            eta = d_ball/obj.cfg.player_MaxLinVelX(1) + ...
+                  abs(da_ball)/obj.cfg.player_MaxAngVel + ...
+                  abs(da_goal)/obj.cfg.player_MaxAngVel;
             def = d_goal;
 
             %add any penalties
@@ -334,7 +348,7 @@ classdef world
                     goalie_id = find(obj.roles(role_idx) == player.GOALIE);
                     if any(goalie_id)
                         eta_idx(eta_idx==goalie_id) = [];
-                        def_idx(eta_idx==goalie_id) = [];
+                        def_idx(def_idx==goalie_id) = [];
                         cur_roles(goalie_id) = player.GOALIE;
                     end
                 end
@@ -346,20 +360,21 @@ classdef world
                 %closest to ball is attacker
                 if n >= 1
                     cur_roles(eta_idx(1)) = player.ATTACKER;
+                    %remove attacker id to avoid double assignment
+                    def_idx(def_idx == eta_idx(1)) = [];
+                    eta_idx(1) = [];
                 end
 
                 if n >= 2
                     %closest to goal is defender unless it is the attacker
-                    if def_idx(1) ~= eta_idx(1)
-                        cur_roles(def_idx(1)) = player.DEFENDER;
-                    else
-                        cur_roles(def_idx(2)) = player.DEFENDER;
-                    end
+                    cur_roles(def_idx(1)) = player.DEFENDER;
+                    %remove defender id to avoid double assignment
+                    eta_idx(eta_idx == def_idx(1)) = [];
                 end
 
                 %second closest to ball is supporter
                 if n >= 3
-                    cur_roles(eta_idx(2)) = player.SUPPORTER;
+                    cur_roles(eta_idx(1)) = player.SUPPORTER;
                 end
 
                 %remaining player is defender2
