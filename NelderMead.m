@@ -19,7 +19,7 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 5;
+max_iter = 5000;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from
@@ -78,7 +78,7 @@ if isempty(load_from_file)
         fprintf('Scoring vertex %i out of %i\n',i,cfg.NM_dim+1)
         S(i).score = score_vertex(S(i).vertex,C,bh_list,batch_size,cfg);
     end
-    t = toc;
+    t = toc(t_start);
     fprintf('It took %4.1f seconds to run %i vertices\n',t,cfg.NM_dim+1)
     fprintf('Therefore the worst case run time for the main loop is %4.1f minutes\n',...
                 (t/(cfg.NM_dim+1))*max_iter*cfg.NM_dim/60)

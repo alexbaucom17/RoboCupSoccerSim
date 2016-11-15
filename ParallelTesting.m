@@ -7,16 +7,20 @@ addpath game pff
 disp('Initializing...')
 
 %set up configuration variables
-batch_size = 4; %ideally this should be a multiple of however many workers are in the parallel pool
+batch_size = 100; %ideally this should be a multiple of however many workers are in the parallel pool
 
 %list team behaviors to test
 bh_list = {'moveSimple', ...
            'movePff'};
-
+       
 %override some config values for parallel testing
 cfg = Config();
 cfg.drawgame = false;
 cfg.halflength = 300; %run 2 5 minute halves
+
+%uncomment to load weights from data
+load data/NM_2016-10-28-12-23-34AttackerDefender
+cfg.pff_weights = new_pff_weights;
 
 %setup behavior array and other needed info
 num_bh = size(bh_list,2);

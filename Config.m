@@ -20,8 +20,8 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 5;
-cfg.num_players_blue = 5;
+cfg.num_players_red = 2;
+cfg.num_players_blue = 2;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
 
 
@@ -40,7 +40,7 @@ cfg.start_pos(6,:) = [3,0.5,pi];
 
 %starting roles
 %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
-cfg.force_initial_roles = false;
+cfg.force_initial_roles = true;
 if cfg.force_initial_roles
     cfg.start_roles_red = [1 2 3 4 0];
     cfg.start_roles_blue = [1 2 3 4 0];

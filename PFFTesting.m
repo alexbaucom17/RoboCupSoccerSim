@@ -10,11 +10,11 @@ addpath game pff
 cfg = Config();
 
 %override some configurations for potential field testing
-cfg.start_pos(2,:) = [-4,2.5,0];      %red attacker
-cfg.start_pos(3,:) = [-1,2,0];     %red defender
-cfg.start_pos(4,:) = [-2.5,0,0];      %red supporter
-cfg.start_pos(5,:) = [-3,1,0];   %red defender2
-cfg.start_pos(1,:) = [2,0,0];    %red goalie
+cfg.start_pos(2,:) = [-1,0.5,0];      %red attacker
+cfg.start_pos(3,:) = [-2.5,1,0];     %red defender
+cfg.start_pos(4,:) = [-1,-0.2,0];      %red supporter
+cfg.start_pos(5,:) = [-2.5,-1,0];   %red defender2
+cfg.start_pos(1,:) = [-4,0,0];    %red goalie
 cfg.start_pos(7,:) = [0.5,0.5,pi];      %blue attacker
 cfg.start_pos(8,:) = [3,1,pi];      %blue defender
 cfg.start_pos(9,:) = [1,0,pi];     %blue supporter
@@ -84,7 +84,7 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 1; %player to visualize
+num = 4; %player to visualize
 clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 
