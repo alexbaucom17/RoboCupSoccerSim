@@ -161,7 +161,7 @@ cfg.ownGoalAgainstPts = -100;
 cfg.kickPts = 0;
 
 %Nelder mead learning parameters and calculations
-cfg.training_role = [2];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
+cfg.training_role = [3];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
 cfg.NM_fn_thresh = 50;
 cfg.NM_domain_thresh = 0.1;
 cfg.NM_weight_penalty = 0;
@@ -169,6 +169,7 @@ cfg.NM_initial_step_size = 2;
 %override initial weights if desired
 % load data/NM_2016-10-28-12-23-34AttackerDefender
 % cfg.pff_weights = new_pff_weights;
+
 %remove all 0 weights from training set but keep index for easy replacement
 %later
 cfg.NM_initial = reshape(cfg.pff_weights(:,cfg.training_role),1,[]);
@@ -181,7 +182,9 @@ for i = cfg.training_role
 end    
 cfg.NM_initial(cfg.NM_initial == 0) = []; 
 cfg.NM_dim = length(cfg.NM_initial);
+
 %adaptive parameters for NM
+%http://www.webpages.uidaho.edu/~fuchang/res/anms.pdf
 cfg.NM_alpha = 1;
 cfg.NM_beta = 1 + 2/cfg.NM_dim;
 cfg.NM_gamma = 0.75-1/(2*cfg.NM_dim);

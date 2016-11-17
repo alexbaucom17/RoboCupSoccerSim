@@ -3,7 +3,6 @@
 %% Initialization
 close all
 clear
-rng('shuffle')
 
 %set up configuration variables
 addpath game pff

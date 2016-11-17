@@ -3,7 +3,6 @@
 %% Initialization
 close all
 clear
-rng('shuffle')
 addpath game pff NM NM/StructSort
 disp('Initializing...')
 
@@ -19,7 +18,7 @@ save_after = 25; %iterations
 batch_size = 4; 
 
 %When to stop searching
-max_iter = 5000;
+max_iter = 500;
 
 %defualt behavior is what all nodes will be tested against to get a score
 %future iterations could possibly be tested against the best node from

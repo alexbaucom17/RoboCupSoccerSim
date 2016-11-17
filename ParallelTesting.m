@@ -2,7 +2,6 @@
 %% Initialization
 close all
 clear
-rng('shuffle')
 addpath game pff
 disp('Initializing...')
 

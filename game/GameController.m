@@ -1,5 +1,9 @@
 function [stats,score] = GameController(c,bh_list,weights)
 
+%so every match with the same parameters will be the same
+rng('default')
+clear ScoreGame
+
 %handle inputs
 if isprop(c,'Value')
     cfg = c.Value;

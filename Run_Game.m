@@ -3,12 +3,11 @@
 %% Initialization
 close all
 clear
-rng('shuffle')
 
 %set up configuration variables
 addpath game pff
 cfg = Config();
-cfg.drawgame = true;
+cfg.drawgame = false;
 
 %set up behavior
 red_team = @movePff;
