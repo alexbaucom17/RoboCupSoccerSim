@@ -110,8 +110,7 @@ bpos = b.pos;
 closeEnough = closeTo(ppos,bpos,kick_rad);
 
 %find relative ball pos and angle
-rel_ball_pos(1) = bpos(1) - ppos(1);
-rel_ball_pos(2) = bpos(2) - ppos(2);
+rel_ball_pos = [bpos(1) - ppos(1) ,bpos(2) - ppos(2)];
 rel_ball_ang = atan2(rel_ball_pos(2),rel_ball_pos(1)) - ppos(3);
 
 %fix rel_ball_angle if too big

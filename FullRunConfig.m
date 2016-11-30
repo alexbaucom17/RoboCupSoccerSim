@@ -1,17 +1,97 @@
-function cfg = Config()
+function cfg = FullRunConfig(i)
 %initialize configuration variables
 
 %initialize configuraiton variable
 cfg = [];
 
+if nargin ~= 1
+    i = 0;
+end
+
+%set parameters for given trial number
+if i == 1
+    
+    cfg.num_players_red = 1;
+    cfg.num_players_blue = 1;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [1]; 
+    cfg.load_fname = '';
+    
+elseif i == 2
+    
+    cfg.num_players_red = 2;
+    cfg.num_players_blue = 2;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [2];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
+elseif i == 3
+    
+    cfg.num_players_red = 3;
+    cfg.num_players_blue = 3;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [3];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
+elseif i == 4
+    
+    cfg.num_players_red = 4;
+    cfg.num_players_blue = 4;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [4];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
+elseif i == 5
+    
+    cfg.num_players_red = 2;
+    cfg.num_players_blue = 2;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 0 3 4 2];
+    cfg.start_roles_blue = [1 0 3 4 2];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [0];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
+elseif i == 6
+    
+elseif i == 7
+    
+elseif i == 8
+    
+elseif i == 9
+    
+%defualt config    
+elseif i == 0
+    
+    cfg.num_players_red = 5;
+    cfg.num_players_blue = 5;
+    cfg.force_initial_roles = false;
+    cfg.training_role = [0]; 
+    cfg.load_fname = '';
+    
+end
+
+
 %drawing
-cfg.drawgame = true;
+cfg.drawgame = false;
 cfg.debug = false;
 
 %timing
 cfg.realtime = false;
 cfg.timestep = 0.1;
-cfg.halflength = 600; %seconds
+cfg.halflength = 300; %seconds
 if cfg.realtime
     cfg.drawgame_time = 0;
 else
@@ -20,10 +100,7 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 3;
-cfg.num_players_blue = 3;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
-
 
 %starting positions
 cfg.start_pos(2,:) = [-1,0,0];
@@ -40,11 +117,7 @@ cfg.start_pos(6,:) = [3,0.5,pi];
 
 %starting roles
 %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
-cfg.force_initial_roles = true;
-if cfg.force_initial_roles
-    cfg.start_roles_red = [1 2 3 4 0];
-    cfg.start_roles_blue = [1 2 3 4 0];
-else
+if ~cfg.force_initial_roles
     cfg.start_roles_red = [0 1 2 3 4];
     cfg.start_roles_blue = [0 1 2 3 4];
 end
@@ -161,17 +234,24 @@ cfg.ownGoalAgainstPts = -100;
 cfg.kickPts = 0;
 
 %Nelder mead learning parameters and calculations
-cfg.training_role = [4];  %1-GOALIE, 2-ATTACKER, 3-DEFENDER, 4-SUPPORTER, 5-DEFENDER2
 cfg.NM_fn_thresh = 50;
 cfg.NM_domain_thresh = 0.1;
 cfg.NM_weight_penalty = 0;
 cfg.NM_initial_step_size = 2;
+cfg.NM_saveAfter = 100;
+cfg.NM_batchSize = 4;
+cfg.NM_maxIter = 1; %500;
+cfg.validation_batchSize = 4;
+
 %override initial weights if desired
-load data/NM_2016-11-17-16-06-47Defender
-cfg.pff_weights = new_pff_weights;
+if ~isempty(cfg.load_fname)
+    load(cfg.load_fname)
+    cfg.pff_weights = new_weights;
+end
 
 %remove all 0 weights from training set but keep index for easy replacement
 %later
+cfg.training_role = cfg.training_role+1;
 cfg.NM_initial = reshape(cfg.pff_weights(:,cfg.training_role),1,[]);
 cfg.NM_idx = [];
 for i = cfg.training_role
@@ -189,6 +269,12 @@ cfg.NM_alpha = 1;
 cfg.NM_beta = 1 + 2/cfg.NM_dim;
 cfg.NM_gamma = 0.75-1/(2*cfg.NM_dim);
 cfg.NM_delta = 1-1/cfg.NM_dim;
+
+
+
+
+end
+
 
 
 

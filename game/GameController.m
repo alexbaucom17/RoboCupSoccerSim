@@ -1,18 +1,25 @@
-function [stats,score] = GameController(c,bh_list,weights)
+function [stats,score] = GameController(C,bh_list,r_seed,weights)
 
 %so every match with the same parameters will be the same
-rng('default')
 clear ScoreGame
 
-%handle inputs
-if isprop(c,'Value')
-    cfg = c.Value;
+%set random seed
+if nargin > 2
+    rng(r_seed,'twister')
 else
-    cfg = c;
+    rng('default')
 end
 
+%handle inputs
+if isprop(C,'Value')
+    cfg = C.Value;
+else
+    cfg = C;
+end
+
+
 %override defualt weights if needed
-if nargin > 2
+if nargin > 3
     cfg.pff_weights = weights;
 end
 
@@ -20,7 +27,6 @@ end
 w = world(cfg);
 
 %set up potential field functions
-% pff_funcs = create_pff_funcs(cfg,cfg.use_static_functions);
 pff_funcs = pff_funcs_sym(cfg);
 
 %set up players

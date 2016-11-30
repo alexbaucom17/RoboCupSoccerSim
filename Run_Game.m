@@ -26,7 +26,7 @@ bh_list = [repmat({red_team},cfg.num_players_red,1); repmat({blue_team},cfg.num_
 % bh_list(idx) = {test_behavior};
 
 %uncomment to load weights from data
-load data/NM_2016-11-06-17-13-51Attacker
+load data/NM_2016-11-22-19-55-28Supporter
 cfg.pff_weights = new_pff_weights;
       
 %run game

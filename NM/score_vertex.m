@@ -11,8 +11,8 @@ scores = zeros(1,batch_size);
 L = length(behavior_list);
 behavior_list2 = cat(1,behavior_list(L/2+1:end),behavior_list(1:L/2));
 parfor j = 1:batch_size
-    [~,score1] = GameController(C,behavior_list,w);
-    [~,score2] = GameController(C,behavior_list2,w);
+    [~,score1] = GameController(C,behavior_list,j,w);
+    [~,score2] = GameController(C,behavior_list2,j,w);
     scores(j) = score1.total(1)+score2.total(2);
 end
 
