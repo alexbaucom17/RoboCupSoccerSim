@@ -20,8 +20,8 @@ end
 cfg.record_movie = false;
 
 %number of players
-cfg.num_players_red = 3;
-cfg.num_players_blue = 3;
+cfg.num_players_red = 5;
+cfg.num_players_blue = 5;
 cfg.num_players = cfg.num_players_red + cfg.num_players_blue;
 
 

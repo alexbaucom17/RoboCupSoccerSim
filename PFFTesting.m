@@ -33,7 +33,7 @@ bh_list =  cat(1,repmat({@movePff},cfg.num_players_red,1),...
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = pff_funcs_sym(cfg);
+pff_funcs = pff_funcs_symGeneral(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);
@@ -83,7 +83,7 @@ b = update(b);
 [p,b] = HandleCollisions(p,b,cfg);   
 
 %pff visualization
-num = 4; %player to visualize
+num = 1; %player to visualize
 clr = 'red';
 VisPFF(p,b,w,cfg,num,clr,ax);
 

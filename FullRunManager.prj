@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3855200201" file="D:\myStuff\RoboCupSoccerSim\FullRunManager.prj" location="D:\myStuff\RoboCupSoccerSim" name="FullRunManager" preferred-package-location="D:\myStuff\RoboCupSoccerSim\FullRunManager\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2372007390" file="D:\myStuff\RoboCupSoccerSim\FullRunManager.prj" location="D:\myStuff\RoboCupSoccerSim" name="FullRunManager" preferred-package-location="D:\myStuff\RoboCupSoccerSim\FullRunManager\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>FullRunManager</param.appname>
     <param.icon />
     <param.icons />
@@ -84,6 +84,7 @@
       <file>${PROJECT_ROOT}\@player\velSimple.m</file>
       <file>${PROJECT_ROOT}\@world\world.m</file>
       <file>${PROJECT_ROOT}\FullRunConfig.m</file>
+      <file>${PROJECT_ROOT}\FullRunLearner.m</file>
       <file>${PROJECT_ROOT}\FullRunValidation.m</file>
       <file>${PROJECT_ROOT}\game\AnimateGame.m</file>
       <file>${PROJECT_ROOT}\game\CheckWorld.m</file>
@@ -91,8 +92,21 @@
       <file>${PROJECT_ROOT}\game\HandleCollisions.m</file>
       <file>${PROJECT_ROOT}\game\ScoreGame.m</file>
       <file>${PROJECT_ROOT}\game\ShowField.m</file>
-      <file>${PROJECT_ROOT}\pff\calculate_distances2.m</file>
-      <file>${PROJECT_ROOT}\pff\pff_funcs_sym.m</file>
+      <file>${PROJECT_ROOT}\NM\estimate_final_parameters.m</file>
+      <file>${PROJECT_ROOT}\NM\generate_simplex.m</file>
+      <file>${PROJECT_ROOT}\NM\SaveData.m</file>
+      <file>${PROJECT_ROOT}\NM\score_vertex.m</file>
+      <file>${PROJECT_ROOT}\NM\simplex_transformation.m</file>
+      <file>${PROJECT_ROOT}\NM\StructSort\sortStruct.m</file>
+      <file>${PROJECT_ROOT}\NM\termination_test.m</file>
+      <file>${PROJECT_ROOT}\pff\calculate_distances.m</file>
+      <file>${PROJECT_ROOT}\pff\heaviside.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral1.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral2.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral3.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral4.m</file>
+      <file>${PROJECT_ROOT}\pff\pffGeneral5.m</file>
     </fileset.depfun>
     <build-deliverables>
       <file location="${PROJECT_ROOT}\FullRunManager\for_testing" name="FullRunManager.exe" optional="false">D:\myStuff\RoboCupSoccerSim\FullRunManager\for_testing\FullRunManager.exe</file>

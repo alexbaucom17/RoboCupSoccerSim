@@ -104,9 +104,9 @@ while n <= max_iter
 end
 
 if n < max_iter
-    disp('\nSearch has completed')
+    disp('Search has completed')
 else
-    disp('\nSearch has reached max iterations')
+    disp('Search has reached max iterations')
 end
 
 t = toc(t_start);

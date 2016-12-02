@@ -23,10 +23,12 @@ sampleX = [sampleX pos_cur(1)];
 sampleY = [sampleY pos_cur(2)];
 
 %use symoblic pffs
-pff = obj.pffs{obj.role+1};
+%pff = obj.pffs{obj.role+1};
+pff = obj.pffs;
+weights = obj.cfg.pff_weights(:,obj.role+1);
 [dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate] ...
-                = calculate_distances2(obj.cfg,[sampleX',sampleY'],pos_cur(3),ball_global,team_pos,obj.dir);
-P = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate);
+                = calculate_distances(obj.cfg,[sampleX',sampleY'],pos_cur(3),ball_global,team_pos,obj.dir);
+P = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate,weights);
 cur_val = P(end);
 P = P(1:end-1);
 

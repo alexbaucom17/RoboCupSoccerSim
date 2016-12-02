@@ -27,7 +27,7 @@ end
 w = world(cfg);
 
 %set up potential field functions
-pff_funcs = pff_funcs_sym(cfg);
+pff_funcs = @pffGeneral; %pff_funcs_symGeneral(cfg);
 
 %set up players
 p = cell(cfg.num_players,1);

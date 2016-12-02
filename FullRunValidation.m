@@ -33,6 +33,7 @@ end
 disp('Beginning validation...')
 
 scores = zeros(batch_size,2);
+validation = [];
 %run in batches
 for i = 1:num_batches
     
@@ -55,10 +56,12 @@ for i = 1:num_batches
     team1_wins = sum(scores(:,1)>scores(:,2),1);
     team2_wins = sum(scores(:,1)<scores(:,2),1);
     ties = batch_size - team1_wins - team2_wins;
-       
+    if i == 1
+        validation.simpleRatio = team2_wins/team1_wins; 
+    else
+        validation.pffRatio = team2_wins/team1_wins;
+    end
 end
-
-validation = 0;
 
 end
 

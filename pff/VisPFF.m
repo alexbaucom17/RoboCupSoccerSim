@@ -31,12 +31,13 @@ team_pos = team_pos(:,1:2);
 % Z = arrayfun(fn,X,Y);
 
 %symbolic pffs
-pff = p{num}.pffs{p{num}.role+1};
+pff = p{num}.pffs; %{p{num}.role+1};
+weights = cfg.pff_weights(:,p{num}.role+1);
 x = reshape(X,[],1);
 y = reshape(Y,[],1);
 [dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate] ...
-                = calculate_distances2(cfg,[x,y],0,ball_global,team_pos,dir);
-z = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate);
+                = calculate_distances(cfg,[x,y],0,ball_global,team_pos,dir);
+z = pff(dball,dshotpath,dshotpathDef,dgoalAtt,dgoalDef,dbehindball,dsideline,dteammate,weights);
 Z = reshape(z,size(X));
 
 
