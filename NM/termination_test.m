@@ -16,7 +16,7 @@ S_sorted = sortStruct(S,'score');
 score_range = S_sorted(end).score - S_sorted(1).score;
 if abs(score_range) < cfg.NM_fn_thresh
     term_f = true;
-    fprintf('Function scores have converged with a range of %4.1f\n',score_range)
+    %fprintf('Function scores have converged with a range of %4.1f\n',score_range)
 end
 
 %compute domain range and check to see if it is small enough

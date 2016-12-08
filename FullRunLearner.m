@@ -37,6 +37,8 @@ bh_list(training_idx) = {test_behavior};
 
 %loop counter
 n = 0;
+n_restarts = 0;
+restart = false;
 
 %start parpool if needed and add needed files + data
 p = gcp();
@@ -83,8 +85,22 @@ end
 disp('Entering main loop')
 while n <= max_iter
     
+    %if restart is required
+    if restart
+        disp('Restarting NM...')
+        n_restarts = n_restarts + 1;
+        cfg.pff_weights = estimate_final_parameters(S,cfg);
+        cfg = ConfigureNM(cfg);
+        S = generate_simplex(cfg);
+        %get scores for all vertices
+        for i = 1:(cfg.NM_dim+1)
+            fprintf('Scoring vertex %i out of %i\n',i,cfg.NM_dim+1)
+            S(i).score = score_vertex(S(i).vertex,C,bh_list,batch_size,cfg);
+        end
+    end
+        
     %print iteration number
-    fprintf('%i: ',n)
+    fprintf('%i-%i: ',n_restarts, n)
     
     %perform simplex transformation based off of vertex scores
     S = simplex_transformation(S,cfg,C,bh_list,batch_size);    
@@ -99,7 +115,7 @@ while n <= max_iter
     
     %Test for termination
     if termination_test(S,cfg)
-        break
+        restart = true;
     end
 end
 

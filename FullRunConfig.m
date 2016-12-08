@@ -66,11 +66,58 @@ elseif i == 5
     
 elseif i == 6
     
+    cfg.num_players_red = 2;
+    cfg.num_players_blue = 2;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 0 3 4 2];
+    cfg.start_roles_blue = [1 0 3 4 2];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [0];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
 elseif i == 7
+    
+    cfg.num_players_red = 3;
+    cfg.num_players_blue = 3;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [2,3];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
     
 elseif i == 8
     
+    cfg.num_players_red = 4;
+    cfg.num_players_blue = 4;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [2,4];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
 elseif i == 9
+    
+    cfg.num_players_red = 5;
+    cfg.num_players_blue = 5;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [1];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
+    
+elseif i == 10
+    
+    cfg.num_players_red = 5;
+    cfg.num_players_blue = 5;
+    %Goalie-0; Attacker-1; Defender-2; Supporter-3; Defender2-4
+    cfg.start_roles_red = [1 2 3 4 0];
+    cfg.start_roles_blue = [1 2 3 4 0];
+    cfg.force_initial_roles = true;
+    cfg.training_role = [2,3,4,0];  
+    cfg.load_fname = strcat('FullRunData/Run',num2str(i-1));
     
 %defualt config    
 elseif i == 0
@@ -234,14 +281,14 @@ cfg.ownGoalAgainstPts = -100;
 cfg.kickPts = 0;
 
 %Nelder mead learning parameters and calculations
-cfg.NM_fn_thresh = 50;
-cfg.NM_domain_thresh = 0.1;
+cfg.NM_fn_thresh = 150;
+cfg.NM_domain_thresh = 0.01;
 cfg.NM_weight_penalty = 0;
-cfg.NM_initial_step_size = 2;
+cfg.NM_initial_step_size = 0.05;
 cfg.NM_saveAfter = 100;
 cfg.NM_batchSize = 4;
-cfg.NM_maxIter = 1; %500;
-cfg.validation_batchSize = 4;
+cfg.NM_maxIter = 2000;
+cfg.validation_batchSize = 50;
 
 %override initial weights if desired
 if ~isempty(cfg.load_fname)

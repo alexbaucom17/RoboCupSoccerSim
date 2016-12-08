@@ -13,7 +13,7 @@ if ~exist('FullRunData', 'dir')
   mkdir('FullRunData')
 end
 
-n_trials = 1;
+n_trials = 10; %max 10
 default_config = FullRunConfig();
 t_fullrun = tic;
 

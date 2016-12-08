@@ -58,8 +58,12 @@ for i = 1:num_batches
     ties = batch_size - team1_wins - team2_wins;
     if i == 1
         validation.simpleRatio = team2_wins/team1_wins; 
+        validation.simpleTies = ties;
+        validation.simpleGoals = total_goals;
     else
         validation.pffRatio = team2_wins/team1_wins;
+        validation.pffTies = ties;
+        validation.pffGoals = total_goals;
     end
 end
 
